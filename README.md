@@ -24,8 +24,8 @@ The community edition of IntelliJ IDEA should work as well, but it isn't tested.
 
 Install maven through a package manager. Open the project in IntelliJ and go to:
 
-1. Click File 🡒 Settings.
-2. Expand Build, Execution, Deployment 🡒 Build Tools 🡒 Maven.
+1. Click File -> Settings.
+2. Expand Build, Execution, Deployment -> Build Tools -> Maven.
 3. Check Use plugin registry.
 4. Click OK or Apply.
 
@@ -38,7 +38,7 @@ _install_ Lifecycles.
 
 Set up a run and debug config by:
 
-1. Click Configurations 🡒 Edit Configurations.
+1. Click Configurations -> Edit Configurations.
 2. Add a configuration to the list of type Application
 3. Choose Java 17 as SDK and choose main class as _fundamentals.server.ContinuousIntegrationServer_
 4. Click OK or Apply

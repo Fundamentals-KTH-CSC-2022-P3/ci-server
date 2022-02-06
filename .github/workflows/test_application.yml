@@ -20,6 +20,12 @@ jobs:
         with:
           java-version: ${{ matrix.jdk }}
 
+      - name: Download dependencies
+        run: |
+            # compile project here to force download of dependencies and
+            # make test output cleaner in the event of a test failure
+            mvn compile
+
       - name: Run the Testsuite
         run: |
           mvn test

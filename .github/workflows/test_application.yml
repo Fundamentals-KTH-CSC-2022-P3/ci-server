@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        jdk: [ 17 ]
+        jdk: [ 11, 14, 17 ]
     env:
       JDK_VERSION: ${{ matrix.jdk }}
     steps:

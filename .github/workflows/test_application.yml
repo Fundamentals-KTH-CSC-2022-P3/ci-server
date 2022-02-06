@@ -1,0 +1,25 @@
+name: Test Application
+on:
+  pull_request:
+
+jobs:
+  push:
+    name: Run Testsuite
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+        jdk: [ 17 ]
+    env:
+      JDK_VERSION: ${{ matrix.jdk }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.jdk }}
+
+      - name: Run the Testsuite
+        run: |
+          mvn test

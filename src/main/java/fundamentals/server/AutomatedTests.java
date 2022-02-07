@@ -40,7 +40,7 @@ public class AutomatedTests {
             e.printStackTrace();
         }
 
-        String[] mavenCmd = {"mvn", "test"};
+        String[] mavenCmd = {"mvn.cmd", "test"};
         System.out.println("running maven");
         try {
             runtime.exec(mavenCmd, null, repoDirectory).waitFor();
@@ -50,5 +50,13 @@ public class AutomatedTests {
         }
 
         System.out.println("Done with testing :^)!");
+    }
+
+    public static void main(String[] args) {
+        try {
+            Runtime.getRuntime().exec("mvn.cmd");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

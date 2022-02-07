@@ -2,7 +2,9 @@ package fundamentals.server;
 import org.json.*;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.StandardCopyOption;
 import java.util.Scanner;
 
 public class AutomatedTests {
@@ -42,12 +44,18 @@ public class AutomatedTests {
 
         String[] mavenCmd = {"mvn.cmd", "test"};
         System.out.println("running maven");
+        File testOutputFile = new File(WORK_DIR, "maven-test-out.txt");
+        Process mavenTestProcess = runtime.exec(mavenCmd, null, repoDirectory);
         try {
-            runtime.exec(mavenCmd, null, repoDirectory).waitFor();
+            mavenTestProcess.waitFor();
         } catch (InterruptedException e) {
             System.err.println("Could not wait for mvn test!");
             e.printStackTrace();
         }
+        java.nio.file.Files.copy(
+                mavenTestProcess.getInputStream(),
+                testOutputFile.toPath(),
+                StandardCopyOption.REPLACE_EXISTING);
 
         System.out.println("Done with testing :^)!");
     }

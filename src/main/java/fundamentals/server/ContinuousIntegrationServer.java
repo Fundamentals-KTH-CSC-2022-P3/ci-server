@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.ServletException;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
@@ -55,7 +56,12 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         if (baseRequest.getMethod().equals("POST")){
             String payload = request.getParameter("payload");
             if (payload != null){
-                AutomatedTests autoTests = new AutomatedTests(payload);
+                try {
+                    AutomatedTests autoTests = new AutomatedTests(payload);
+                } catch (Exception e) {
+                    System.out.println("Got exception!");
+                    e.printStackTrace();
+                }
             }
         }
 

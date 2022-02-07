@@ -7,6 +7,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class ContinuousIntegrationServerTest {
 
     @Test
+    void failingTest() {
+        assertTrue(false);
+    }
+
+    @Test
     void getPortNumberFromInputOrElseDefaultTestWithValidInput() {
         var portNumber = 123456;
         var arrayWithPort = new String[]{String.valueOf(portNumber)};

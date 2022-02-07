@@ -52,6 +52,13 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
 
+        if (baseRequest.getMethod().equals("POST")){
+            String payload = request.getParameter("payload");
+            if (payload != null){
+                AutomatedTests autoTests = new AutomatedTests(payload);
+            }
+        }
+
         System.out.println(target);
 
         response.getWriter().println("CI job done");

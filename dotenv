@@ -1,0 +1,10 @@
+# This is the environment file that we will use to load values into our program.
+# Use this file to store values that must stay hidden.
+
+# Before you can use this file rename it to ".env" and change the dummy value of each key to the real value.
+
+# The username of our CI server.
+USERNAME = example_user
+
+# The personal access token of our CI server.
+PERSONAL_ACCESS_TOKEN = example_token

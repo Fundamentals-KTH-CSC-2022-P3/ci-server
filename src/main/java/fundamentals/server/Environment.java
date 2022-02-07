@@ -23,7 +23,7 @@ public class Environment {
     private HashMap<String, String> keyValuePairs = new HashMap<>();
 
     /**
-     * Returns an instance of this class. Only one instance of this class will ever be created.
+     * Returns an instance of this class. Only one instance of this class will ever be created during program execution.
      * @return an instance of type {@code Environment}
      */
     public static Environment getInstance() {

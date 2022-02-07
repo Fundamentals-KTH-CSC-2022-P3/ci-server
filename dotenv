@@ -4,7 +4,8 @@
 # The key is separated from the value using the "=" symbol,
 # which means that the format for a key-value pair is: <key> "=" <value>
 
-# Before you can use this file rename it to ".env" and change the dummy value of each key to the real value.
+# Before you can use the environment, make a copy of this file and call it ".env" and
+# change the dummy value of each key to the real value.
 
 # The username of our CI server.
 USERNAME = example_user

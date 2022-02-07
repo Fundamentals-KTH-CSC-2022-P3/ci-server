@@ -49,6 +49,6 @@ public class AutomatedTests {
             e.printStackTrace();
         }
 
-        System.out.println("Done!");
+        System.out.println("Done with testing :^)!");
     }
 }

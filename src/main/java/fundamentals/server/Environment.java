@@ -35,7 +35,7 @@ public class Environment {
     }
 
     /**
-     * Parse the ".env" file.
+     * Create an instance of the {@code Environment} class and parse the ".env" file.
      */
     private static void parseEnvironmentFile() {
         instance = new Environment();

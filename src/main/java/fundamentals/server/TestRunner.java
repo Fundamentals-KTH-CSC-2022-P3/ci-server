@@ -33,6 +33,7 @@ public class TestRunner {
 
         runTests();
         checkTestResults();
+        cleanUp(localRepo);
     }
 
     private void runTests() {
@@ -99,5 +100,15 @@ public class TestRunner {
             return false;
         }
         return reader.lines().anyMatch(s -> s.matches("Tests run: \\d+, Failures: 0,.+"));
+    }
+
+    private void cleanUp(File file) {
+        File[] contents = file.listFiles();
+        if (contents != null) {
+            for (File f : contents) {
+                cleanUp(f);
+            }
+        }
+        file.delete();
     }
 }

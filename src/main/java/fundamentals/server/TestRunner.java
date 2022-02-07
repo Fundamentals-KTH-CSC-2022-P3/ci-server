@@ -99,7 +99,14 @@ public class TestRunner {
             System.err.println("File " + report.getAbsolutePath() + " was not found.");
             return false;
         }
-        return reader.lines().anyMatch(s -> s.matches("Tests run: \\d+, Failures: 0,.+"));
+        boolean result = reader.lines().anyMatch(s -> s.matches("Tests run: \\d+, Failures: 0,.+"));
+        try {
+            reader.close();
+        } catch (IOException ioException) {
+            System.err.println("Could not close file " + report.getAbsolutePath());
+            ioException.printStackTrace();
+        }
+        return result;
     }
 
     private void cleanUp(File file) {

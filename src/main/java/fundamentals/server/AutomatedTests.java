@@ -51,15 +51,4 @@ public class AutomatedTests {
 
         System.out.println("Done!");
     }
-
-    public static void main(String[] args) {
-        String clone_url = "https://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@github.com/Fundamentals-KTH-CSC-2022-P3/set-commit-status-test.git";
-        File f = new File("H:/tmp/set-commit-status-test");
-        try {
-            Runtime.getRuntime().exec("git clone " + clone_url, null, WORK_DIR);
-            String[] checkout_command = {"git", "checkout", "test-branch"};
-            Scanner s = new Scanner(Runtime.getRuntime().exec(checkout_command, null, f).getInputStream());
-            while (s.hasNext()) System.out.println(s.next());
-        } catch (Exception e) {}
-    }
 }

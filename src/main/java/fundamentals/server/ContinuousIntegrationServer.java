@@ -34,6 +34,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         server.setHandler(new ContinuousIntegrationServer());
         server.start();
         System.out.println("Server has successfully started on port " + portNumber);
+        CommitStatus.test();
         try {
             server.join();
         } catch (InterruptedException ex) {

@@ -16,12 +16,11 @@ public class BuildAllHandler extends AbstractHandler {
                        HttpServletRequest request,
                        HttpServletResponse response)
             throws IOException, ServletException {
-        response.setContentType("text/html;charset=utf-8");
+        response.setContentType("application/json;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
 
-        System.out.println("build ALL handler");
-
-        response.getWriter().println("CI job done");
+        // TODO:
+        // Respond with the JSON array of all builds.
     }
 }

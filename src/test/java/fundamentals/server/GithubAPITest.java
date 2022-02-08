@@ -11,7 +11,7 @@ public class GithubAPITest {
 
     private static final String OWNER = "Fundamentals-KTH-CSC-2022-P3";
     private static final String REPOSITORY = "ci-server";
-    private static final String COMMIT_SHA = "323";
+    private static final String COMMIT_SHA = "8d3fc71c8ab65bfc50d6822fb163408250978d61";
 
     private GithubAPI api = new GithubAPI(OWNER, REPOSITORY);
 

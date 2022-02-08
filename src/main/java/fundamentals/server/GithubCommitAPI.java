@@ -12,7 +12,7 @@ import java.util.Base64;
 /**
  * Contains methods that can be called to work with the Github API for a specific owner and repository.
  */
-public class GithubAPI {
+public class GithubCommitAPI {
 
     public static final String GITHUB_API_ROOT_URL = "https://api.github.com";
 
@@ -23,88 +23,71 @@ public class GithubAPI {
     // The credentials for basic authorization.
     public static final String CREDENTIALS = Base64.getEncoder().encodeToString((CI_USERNAME + ":" + CI_PERSONAL_ACCESS_TOKEN).getBytes(StandardCharsets.UTF_8));
 
-    /**
-     * The four different statuses that can be assigned to each commit.
-     */
-    public enum CommitStatus {
-        ERROR("error"),
-        FAILURE("failure"),
-        PENDING("pending"),
-        SUCCESS("success");
-
-        final String name;
-
-        private CommitStatus(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
-    }
-
     private final String owner;
     private final String repository;
+    private final String commitHash;
 
     /**
-     * Creates a new {@code Github} API object against a specific owner and repository.
-     * @param owner the owner of the repository that we want to work with.
+     * Creates a new {@code GithubCommitAPI} object against a specific owner, repository and commit.
+     *
+     * @param owner      the owner of the repository that we want to work with.
      * @param repository the repository we want to work with.
+     * @param commitHash the commit we want to work with, specify the SHA hash.
      */
-    public GithubAPI(String owner, String repository) {
+    public GithubCommitAPI(String owner, String repository, String commitHash) {
         this.owner = owner;
         this.repository = repository;
+        this.commitHash = commitHash;
     }
 
     /**
      * Set the commit status of a specific commit to error.
-     * @param sha the hash of the commit.
+     *
      * @param description a description for the commit status. For example "all tests passed".
-     * @param targetUrl a target url that will be shown together with the commit status (this is often a URL to a page that shows more build information).
+     * @param targetUrl   a target url that will be shown together with the commit status (this is often a URL to a page that shows more build information).
      * @return true if the commit status was set, otherwise false.
      */
-    public boolean setCommitStatusError(String sha, String description, String targetUrl) {
-        return setCommitStatus(CommitStatus.ERROR, sha, description, targetUrl);
+    public boolean setCommitStatusError(String description, String targetUrl) {
+        return setCommitStatus(CommitStatus.ERROR, description, targetUrl);
     }
 
     /**
      * Set the commit status of a specific commit to failure.
-     * @param sha the hash of the commit.
+     *
      * @param description a description for the commit status. For example "one test failed".
-     * @param targetUrl a target url that will be shown together with the commit status (this is often a URL to a page that shows more build information).
+     * @param targetUrl   a target url that will be shown together with the commit status (this is often a URL to a page that shows more build information).
      * @return true if the commit status was set, otherwise false.
      */
-    public boolean setCommitStatusFailure(String sha, String description, String targetUrl) {
-        return setCommitStatus(CommitStatus.FAILURE, sha, description, targetUrl);
+    public boolean setCommitStatusFailure(String description, String targetUrl) {
+        return setCommitStatus(CommitStatus.FAILURE, description, targetUrl);
     }
 
     /**
      * Set the commit status of a specific commit to pending.
-     * @param sha the hash of the commit.
+     *
      * @param description a description for the commit status. For example "running tests...".
-     * @param targetUrl a target url that will be shown together with the commit status (this is often a URL to a page that shows more build information).
+     * @param targetUrl   a target url that will be shown together with the commit status (this is often a URL to a page that shows more build information).
      * @return true if the commit status was set, otherwise false.
      */
-    public boolean setCommitStatusPending(String sha, String description, String targetUrl) {
-        return setCommitStatus(CommitStatus.PENDING, sha, description, targetUrl);
+    public boolean setCommitStatusPending(String description, String targetUrl) {
+        return setCommitStatus(CommitStatus.PENDING, description, targetUrl);
     }
 
     /**
      * Set the commit status of a specific commit to success.
-     * @param sha the hash of the commit.
+     *
      * @param description a description for the commit status. For example "all tests succeeded".
-     * @param targetUrl a target url that will be shown together with the commit status (this is often a URL to a page that shows more build information).
+     * @param targetUrl   a target url that will be shown together with the commit status (this is often a URL to a page that shows more build information).
      * @return true if the commit status was set, otherwise false.
      */
-    public boolean setCommitStatusSuccess(String sha, String description, String targetUrl) {
-        return setCommitStatus(CommitStatus.SUCCESS, sha, description, targetUrl);
+    public boolean setCommitStatusSuccess(String description, String targetUrl) {
+        return setCommitStatus(CommitStatus.SUCCESS, description, targetUrl);
     }
 
     // For how a commit status is created see: https://docs.github.com/en/rest/reference/commits
-    private boolean setCommitStatus(CommitStatus status, String sha, String description, String targetUrl) {
+    private boolean setCommitStatus(CommitStatus status, String description, String targetUrl) {
         try {
-            URL url = buildGithubURL("repos", owner, repository, "statuses", sha);
+            URL url = buildGithubURL("repos", owner, repository, "statuses", commitHash);
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod("POST");
             http.setDoOutput(true);

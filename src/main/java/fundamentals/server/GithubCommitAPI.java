@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 /**
- * Contains methods that can be called to work with the Github API for a specific owner and repository.
+ * Contains methods that can be called to work with the Github commit API.
  */
 public class GithubCommitAPI {
 

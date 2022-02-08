@@ -16,12 +16,32 @@ public class GithubCommitAPI {
 
     public static final String GITHUB_API_ROOT_URL = "https://api.github.com";
 
-    // Should get from the environment (fix later).
-    public static final String CI_USERNAME = "dd2480-ci-user";
-    public static final String CI_PERSONAL_ACCESS_TOKEN = "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";
+    public static final String CI_USERNAME = Environment.getInstance().getValue("USERNAME");;
+    public static final String CI_PERSONAL_ACCESS_TOKEN = Environment.getInstance().getValue("PERSONAL_ACCESS_TOKEN");
 
     // The credentials for basic authorization.
     public static final String CREDENTIALS = Base64.getEncoder().encodeToString((CI_USERNAME + ":" + CI_PERSONAL_ACCESS_TOKEN).getBytes(StandardCharsets.UTF_8));
+
+    /**
+     * The four different statuses that can be assigned to each Github commit.
+     */
+    public enum CommitStatus {
+        ERROR("error"),
+        FAILURE("failure"),
+        PENDING("pending"),
+        SUCCESS("success");
+
+        final String name;
+
+        private CommitStatus(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
 
     private final String owner;
     private final String repository;

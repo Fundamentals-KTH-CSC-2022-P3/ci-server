@@ -2,6 +2,38 @@
 
 Welcome to our implementation of a minimalistic CI-Server.
 
+## Core CI Features
+
+### Compilation
+#### Implemented
+#### Unit-tested
+
+### Testing
+#### Implemented
+#### Unit-tested
+
+### Notification
+
+We have implemented one notification mechanism which is that
+the CI server sets the commit status.
+
+#### Implemented
+
+We created a new Github account called *dd2480-ci-user* which we added to our
+repository. Furthermore, we generated a personal access token for this account.
+Using the personal access token for basic authorization we could create a POST
+request to set the status of a commit.
+We followed the [commits API](https://docs.github.com/en/rest/reference/commits#create-a-commit-status) specification
+to make this work.
+
+#### Unit-tested
+
+We created a new branch called *test-github-api* were we pushed one sample
+commit. In our tests, we modify the commit status of this commit and check that
+we receive a response code of 201 (Created) from Github.
+We created one unit test per possible commit status update:
+*success*, *failure*, *error* and *pending*.
+
 ## Setup
 
 This project uses the following tools:

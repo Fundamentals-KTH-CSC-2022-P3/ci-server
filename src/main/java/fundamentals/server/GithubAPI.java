@@ -1,5 +1,7 @@
 package fundamentals.server;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -74,7 +76,7 @@ public class GithubAPI {
             http.connect();
             http.getOutputStream().write(body);
 
-            // The commit status of the commit has been updated if we retrieve the HTTP response code 201 (Created).
+            // If the commit status of the commit has been updated we retrieve the HTTP response code 201 (Created).
             return http.getResponseCode() == 201;
 
         } catch (MalformedURLException e) {
@@ -87,18 +89,12 @@ public class GithubAPI {
     }
 
     private byte[] getCommitStatusJSONObject(CommitStatus status, String description, String targetUrl) {
-        StringBuilder jsonObject = new StringBuilder();
-        jsonObject.append("{");
-        jsonObject.append("\"" + "state" + "\"" + ":");
-        jsonObject.append("\"" + status + "\"" + ",");
-        jsonObject.append("\"" + "description" + "\"" + ":");
-        jsonObject.append("\"" + description + "\"" + ",");
-        jsonObject.append("\"" + "target_url" + "\"" + ":");
-        jsonObject.append("\"" + targetUrl + "\"" + ",");
-        jsonObject.append("\"" + "context" + "\"" + ":");
-        jsonObject.append("\"" + CI_USERNAME + "\"");
-        jsonObject.append("}");
-        return jsonObject.toString().getBytes(StandardCharsets.UTF_8);
+        JSONObject object = new JSONObject();
+        object.put("state", status.toString());
+        object.put("description", description);
+        object.put("target_url", targetUrl);
+        object.put("context", CI_USERNAME);
+        return object.toString().getBytes(StandardCharsets.UTF_8);
     }
 
     private URL buildGithubURL(String... parts) throws MalformedURLException {

@@ -42,3 +42,15 @@ Set up a run and debug config by:
 2. Add a configuration to the list of type Application
 3. Choose Java 17 as SDK and choose main class as _fundamentals.server.ContinuousIntegrationServer_
 4. Click OK or Apply
+
+## Compilation on the CI server
+The CI server clones the repository specified in the payload provided by the GitHub webhook,
+checks out the correct branch and then runs `mvn compile` in the root of the
+repository. If the return code of `mvn compile` is 0, the build is considered
+successful, otherwise it is considered a failure.
+
+The compilation is unit tested by cloning a repository that is guaranteed (by
+GitHub actions) to be in a compilable state, and then trying to compile that repo
+and verifying that it passes. Another unit test is constituted by disturbing the
+source code of that repository to an uncompilable state and verifying that compilation
+fails.

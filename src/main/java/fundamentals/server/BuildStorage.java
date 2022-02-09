@@ -6,16 +6,25 @@ import org.json.JSONObject;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * Represents a persistent storage that will store all builds both in main-memory but also on disk in JSON format.
+ * Everytime the server restarts the builds.json file will be loaded into main-memory.
+ * <p>
+ * The {@code BuildStorage} class is implemented using the Singleton pattern which means that the "builds.json" file gets loaded after
+ * the method {@code getInstance} has been called for the first time.
+ */
 public class BuildStorage {
 
     public static final String DEFAULT_BUILD_STORAGE_FILE = "builds.json";
 
     private static BuildStorage instance;
 
+    private HashMap<String, Integer> buildIDToArrayIndex = new HashMap<>();
     private JSONArray builds;
+    private String filePath;
 
     public static BuildStorage getInstance(String filePath) {
         if (instance == null) {
@@ -31,6 +40,7 @@ public class BuildStorage {
 
     private static void loadBuildStorageFile(String filePath) {
         instance = new BuildStorage();
+        instance.filePath = filePath;
 
         // Read the builds from disk into main-memory.
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath, StandardCharsets.UTF_8))) {
@@ -40,9 +50,15 @@ public class BuildStorage {
                 jsonText.append(line);
             }
             instance.builds = new JSONArray(jsonText.toString());
+
+            for (int i = 0; i < instance.builds.length(); i++) {
+                JSONObject build = instance.builds.getJSONObject(i);
+                String buildID = build.getString("build_id");
+                instance.buildIDToArrayIndex.put(buildID, i);
+            }
         } catch (FileNotFoundException e) {
             // Builds file does not exist. Create a builds.json file with an empty array inside.
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, StandardCharsets.UTF_8))){
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, StandardCharsets.UTF_8))) {
                 writer.write("[]");
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -54,72 +70,39 @@ public class BuildStorage {
 
     public JSONObject addNewBuild(String commitHash, String repository, String owner) {
         JSONObject build = new JSONObject();
-        build.put("build_id", UUID.randomUUID());
+
+        // Generate a unique identifier for this build.
+        String buildID = UUID.randomUUID().toString();
+
+        build.put("build_id", buildID);
         build.put("commit", commitHash);
         build.put("repository", repository);
         build.put("owner", owner);
         build.put("build_started", Instant.now().toString());
+        build.put("build_ended", "Still running");
         build.put("compile_status", "pending");
         build.put("test_status", "pending");
         build.put("compile_logs", new JSONArray());
         build.put("test_logs", new JSONArray());
+
         builds.put(build);
+        buildIDToArrayIndex.put(buildID, buildIDToArrayIndex.size() - 1);
+
         return build;
     }
 
-    public JSONObject findBuild(String buildID) {
-        // A good idea is probably to keep an index that maps build_id to position in array.
-        // Then we don't have to do a linear search each time.
-        for (int i = 0; i < builds.length(); i++) {
-            JSONObject build = builds.getJSONObject(i);
-            if (build.getString("build_id").equals(buildID)) {
-                return build;
-            }
-        }
-        // Could not find a build with the requested build ID.
-        return null;
-    }
+    public JSONObject getBuild(String buildID) {
+        // If we can't find a build with that ID then we will return null.
+        if (!buildIDToArrayIndex.containsKey(buildID))
+            return null;
 
-    public boolean setBuildCompileStatus(String buildID, String status) {
-        return setBuildValue(buildID, "compile_status", status);
-    }
+        int index = buildIDToArrayIndex.get(buildID);
 
-    public boolean setBuildTestStatus(String buildID, String status) {
-        return setBuildValue(buildID, "test_status", status);
-    }
-
-    public boolean setBuildEndedTime(String buildID) {
-        return setBuildValue(buildID, "build_ended", Instant.now().toString());
-    }
-
-    private boolean setBuildValue(String buildID, String key, String value) {
-        JSONObject build = findBuild(buildID);
-        if (build == null)
-            return false;
-        build.put(key, value);
-        return true;
-    }
-
-    public boolean setBuildCompileLogs(String buildID, ArrayList<String> logs) {
-        return setBuildArrayValues(buildID, "compile_logs", logs);
-    }
-
-    public boolean setBuildTestLogs(String buildID, ArrayList<String> logs) {
-        return setBuildArrayValues(buildID, "test_logs", logs);
-    }
-
-    private boolean setBuildArrayValues(String buildID, String key, ArrayList<String> values) {
-        JSONObject build = findBuild(buildID);
-        if (build == null)
-            return false;
-        JSONArray array = build.getJSONArray(key);
-        for (String value : values)
-            array.put(value);
-        return true;
+        return builds.getJSONObject(index);
     }
 
     public void saveToDisk() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(BUILD_STORAGE_FILE, StandardCharsets.UTF_8))){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, StandardCharsets.UTF_8))) {
             writer.write(builds.toString());
         } catch (IOException ex) {
             ex.printStackTrace();

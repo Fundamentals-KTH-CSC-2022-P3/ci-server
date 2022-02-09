@@ -9,7 +9,7 @@ import java.util.Base64;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Test the Github API against a test repository.
+ * Test the {@code GithubCommitAPI} class by looking at different values in the HTTP request.
  */
 public class GithubCommitAPITest {
 

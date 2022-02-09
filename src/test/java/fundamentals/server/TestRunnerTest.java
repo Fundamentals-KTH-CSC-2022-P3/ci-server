@@ -3,7 +3,6 @@ package fundamentals.server;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -46,9 +45,7 @@ public class TestRunnerTest {
         testRunner.run();
 
         String output = outputStream.toString();
-        boolean failed = Arrays.asList(output
-                .split("(\\r\\n|\\r)"))
-                .contains("Tests failed!");
+        boolean failed = output.matches("(\\s|.)*Tests failed!(\\s|.)*");
         assertTrue(failed);
     }
 
@@ -66,9 +63,7 @@ public class TestRunnerTest {
         testRunner.run();
 
         String output = outputStream.toString();
-        boolean passed = Arrays.asList(output
-                        .split("(\\r\\n|\\r)"))
-                .contains("Tests were successful!");
+        boolean passed = output.matches("(\\s|.)*Tests were successful!(\\s|.)*");
         assertTrue(passed);
     }
 }

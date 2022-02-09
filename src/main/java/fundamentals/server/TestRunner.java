@@ -27,7 +27,7 @@ public class TestRunner {
     }
 
     private void runTests() {
-        String[] mavenCmd = {"mvn.cmd", "test"};
+        String[] mavenCmd = {"mvn", "test"};
         System.out.println("running maven");
         try {
             runtime.exec(mavenCmd, null, repoManager.repoDir).waitFor();

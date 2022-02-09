@@ -16,7 +16,7 @@ import java.util.HashMap;
  */
 public class Environment {
 
-    public static final String ENVIRONMENT_FILE_NAME = ".env";
+    public static final String DEFAULT_ENVIRONMENT_FILE = ".env";
 
     private static Environment instance = null;
 
@@ -24,23 +24,38 @@ public class Environment {
 
     /**
      * Returns an instance of this class. Only one instance of this class will ever be created during program execution.
+     * This method should only be called from unit-tests. If you are not working on unit tests then call the {@code getInstance()}
+     * method instead that will use the default ".env" file.
+     *
      * @return an instance of type {@code Environment}
      */
-    public static Environment getInstance() {
+    public static Environment getInstance(String filePath) {
         if (instance == null) {
-            parseEnvironmentFile();
+            parseEnvironmentFile(filePath);
         }
 
         return instance;
     }
 
     /**
-     * Create an instance of the {@code Environment} class and parse the ".env" file.
+     * Returns an instance of this class. Only one instance of this class will ever be created during program execution.
+     * The instance will store all the key-value pairs from the ".env" file.
+     *
+     * @return an instance of type {@code Environment}
      */
-    private static void parseEnvironmentFile() {
+    public static Environment getInstance() {
+        return getInstance(DEFAULT_ENVIRONMENT_FILE);
+    }
+
+    /**
+     * Creates an instance of the {@code Environment} class and parses the environment file.
+     *
+     * @param filePath the path to the environment file.
+     */
+    private static void parseEnvironmentFile(String filePath) {
         instance = new Environment();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(ENVIRONMENT_FILE_NAME))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
 
             while ((line = reader.readLine()) != null) {
@@ -71,6 +86,7 @@ public class Environment {
 
     /**
      * Will return the associated value for a given key.
+     *
      * @param key the key.
      * @return the associated value.
      */
@@ -80,10 +96,20 @@ public class Environment {
 
     /**
      * Will return true if the given key is defined in the environment.
+     *
      * @param key the key.
      * @return true if the key is defined, otherwise false.
      */
     public boolean containsKey(String key) {
         return keyValuePairs.containsKey(key);
+    }
+
+    /**
+     * Will return the number of key-value pairs defined in the environment.
+     *
+     * @return the number of defined key-value pairs.
+     */
+    public int size() {
+        return keyValuePairs.size();
     }
 }

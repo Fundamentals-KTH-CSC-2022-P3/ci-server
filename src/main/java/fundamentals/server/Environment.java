@@ -84,6 +84,9 @@ public class Environment {
         }
     }
 
+    // This class should not be instantiated from another class.
+    private Environment() {}
+
     /**
      * Will return the associated value for a given key.
      *

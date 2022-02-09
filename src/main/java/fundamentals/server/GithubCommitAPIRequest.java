@@ -16,6 +16,7 @@ public class GithubCommitAPIRequest {
 
     /**
      * Creates a new HTTP request that can be sent to Github to create a commit status.
+     *
      * @param http an {@code HttpURLConnection} object that stores the whole request (but not the body).
      * @param body the body with should be a JSON object encoded as a UTF-8 byte sequence.
      */
@@ -26,6 +27,7 @@ public class GithubCommitAPIRequest {
 
     /**
      * Will send the request to Github.
+     *
      * @return true if the commit status was created, otherwise false.
      */
     public boolean send() {

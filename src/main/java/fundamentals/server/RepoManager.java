@@ -61,6 +61,9 @@ public class RepoManager {
         checkoutBranch();
     }
 
+    /**
+     * Checks out to the branch specified in the payload given in the constructor.
+     */
     void checkoutBranch() {
         String[] checkoutCmd = {"git", "checkout", branchName};
         System.out.println("checking out");
@@ -82,6 +85,10 @@ public class RepoManager {
         deleteDirectory(parentDir);
     }
 
+    /**
+     * Delete a file, or recursively delete a directory
+     * @param file the file or directory to be deleted
+     */
     static void deleteDirectory(File file) {
         File[] contents = file.listFiles();
         if (contents != null) {

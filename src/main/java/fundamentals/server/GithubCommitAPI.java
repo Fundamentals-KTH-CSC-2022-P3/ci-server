@@ -16,12 +16,6 @@ public class GithubCommitAPI {
 
     public static final String GITHUB_API_ROOT_URL = "https://api.github.com";
 
-    public static final String CI_USERNAME = Environment.getInstance().getValue("USERNAME");;
-    public static final String CI_PERSONAL_ACCESS_TOKEN = Environment.getInstance().getValue("PERSONAL_ACCESS_TOKEN");
-
-    // The credentials for basic authorization.
-    public static final String CREDENTIALS = Base64.getEncoder().encodeToString((CI_USERNAME + ":" + CI_PERSONAL_ACCESS_TOKEN).getBytes(StandardCharsets.UTF_8));
-
     /**
      * The four different statuses that can be assigned to each Github commit.
      */
@@ -46,66 +40,86 @@ public class GithubCommitAPI {
     private final String owner;
     private final String repository;
     private final String commitHash;
+    private final String username;
+    private final String personalAccessToken;
 
     /**
      * Creates a new {@code GithubCommitAPI} object against a specific owner, repository and commit.
+     * To gain access to this repository we will need a username and a personal access token.
+     *
+     * @param owner               the owner of the repository that we want to work with.
+     * @param repository          the repository we want to work with.
+     * @param commitHash          the commit we want to work with, specify the SHA hash.
+     * @param username            the username with access to the repository.
+     * @param personalAccessToken the personal access token for the user.
+     */
+    public GithubCommitAPI(String owner, String repository, String commitHash, String username, String personalAccessToken) {
+        this.owner = owner;
+        this.repository = repository;
+        this.commitHash = commitHash;
+        this.username = username;
+        this.personalAccessToken = personalAccessToken;
+    }
+
+    /**
+     * Creates a new {@code GithubCommitAPI} object against a specific owner, repository and commit.
+     * To gain access to this repository we will the username and personal access token stored in the .env file.
      *
      * @param owner      the owner of the repository that we want to work with.
      * @param repository the repository we want to work with.
      * @param commitHash the commit we want to work with, specify the SHA hash.
      */
     public GithubCommitAPI(String owner, String repository, String commitHash) {
-        this.owner = owner;
-        this.repository = repository;
-        this.commitHash = commitHash;
+        this(owner, repository, commitHash,
+                Environment.getInstance().getValue("USERNAME"), Environment.getInstance().getValue("PERSONAL_ACCESS_TOKEN"));
     }
 
     /**
-     * Set the commit status of a specific commit to error.
+     * Generates a request to set the commit status of a specific commit to error.
      *
      * @param description a description for the commit status. For example "all tests passed".
      * @param targetUrl   a target url that will be shown together with the commit status (this is often a URL to a page that shows more build information).
-     * @return true if the commit status was set, otherwise false.
+     * @return a {@code GithubCommitAPIRequest} object that can be used to send the request.
      */
-    public boolean setCommitStatusError(String description, String targetUrl) {
+    public GithubCommitAPIRequest setCommitStatusError(String description, String targetUrl) {
         return setCommitStatus(CommitStatus.ERROR, description, targetUrl);
     }
 
     /**
-     * Set the commit status of a specific commit to failure.
+     * Generates a request to set the commit status of a specific commit to error.
      *
      * @param description a description for the commit status. For example "one test failed".
      * @param targetUrl   a target url that will be shown together with the commit status (this is often a URL to a page that shows more build information).
-     * @return true if the commit status was set, otherwise false.
+     * @return a {@code GithubCommitAPIRequest} object that can be used to send the request.
      */
-    public boolean setCommitStatusFailure(String description, String targetUrl) {
+    public GithubCommitAPIRequest setCommitStatusFailure(String description, String targetUrl) {
         return setCommitStatus(CommitStatus.FAILURE, description, targetUrl);
     }
 
     /**
-     * Set the commit status of a specific commit to pending.
+     * Generates a request to set the commit status of a specific commit to error.
      *
      * @param description a description for the commit status. For example "running tests...".
      * @param targetUrl   a target url that will be shown together with the commit status (this is often a URL to a page that shows more build information).
-     * @return true if the commit status was set, otherwise false.
+     * @return a {@code GithubCommitAPIRequest} object that can be used to send the request.
      */
-    public boolean setCommitStatusPending(String description, String targetUrl) {
+    public GithubCommitAPIRequest setCommitStatusPending(String description, String targetUrl) {
         return setCommitStatus(CommitStatus.PENDING, description, targetUrl);
     }
 
     /**
-     * Set the commit status of a specific commit to success.
+     * Generates a request to set the commit status of a specific commit to error.
      *
      * @param description a description for the commit status. For example "all tests succeeded".
      * @param targetUrl   a target url that will be shown together with the commit status (this is often a URL to a page that shows more build information).
-     * @return true if the commit status was set, otherwise false.
+     * @return a {@code GithubCommitAPIRequest} object that can be used to send the request.
      */
-    public boolean setCommitStatusSuccess(String description, String targetUrl) {
+    public GithubCommitAPIRequest setCommitStatusSuccess(String description, String targetUrl) {
         return setCommitStatus(CommitStatus.SUCCESS, description, targetUrl);
     }
 
     // For how a commit status is created see: https://docs.github.com/en/rest/reference/commits
-    private boolean setCommitStatus(CommitStatus status, String description, String targetUrl) {
+    private GithubCommitAPIRequest setCommitStatus(CommitStatus status, String description, String targetUrl) {
         try {
             URL url = buildGithubURL("repos", owner, repository, "statuses", commitHash);
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -116,19 +130,14 @@ public class GithubCommitAPI {
             setAcceptHeader(http, "application/vnd.github.v3+json");
             byte[] body = getCommitStatusJSONObject(status, description, targetUrl);
             http.setFixedLengthStreamingMode(body.length);
-            http.connect();
-            http.getOutputStream().write(body);
-
-            // If the commit status of the commit has been updated we retrieve the HTTP response code 201 (Created).
-            return http.getResponseCode() == 201;
-
+            return new GithubCommitAPIRequest(http, body);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return false;
+        return null;
     }
 
     // Returns the JSON object that should be stored in the HTTP body of the "create a commit status" request.
@@ -137,7 +146,7 @@ public class GithubCommitAPI {
         object.put("state", status.toString());
         object.put("description", description);
         object.put("target_url", targetUrl);
-        object.put("context", CI_USERNAME);
+        object.put("context", username);
         return object.toString().getBytes(StandardCharsets.UTF_8);
     }
 
@@ -153,9 +162,14 @@ public class GithubCommitAPI {
         return new URL(url.toString());
     }
 
+    // Returns the base64 string of the concatenation of the username, colon (':') and the personal access token.
+    public String getBasicAuthorizationCredentials() {
+        return Base64.getEncoder().encodeToString((username + ":" + personalAccessToken).getBytes(StandardCharsets.UTF_8));
+    }
+
     // Update the HTTP header to enable basic authorization for the CI server.
     private void setBasicAuthorizationHeader(HttpURLConnection http) {
-        http.setRequestProperty("Authorization", "Basic " + CREDENTIALS);
+        http.setRequestProperty("Authorization", "Basic " + getBasicAuthorizationCredentials());
     }
 
     // Set the Content-Type HTTP header.

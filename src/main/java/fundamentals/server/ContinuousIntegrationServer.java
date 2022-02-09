@@ -1,20 +1,20 @@
 package fundamentals.server;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.ServletException;
 
-import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 
 
 public class ContinuousIntegrationServer extends AbstractHandler {
 
     final static int DEFAULT_PORT_NUMBER = 8014;
-    final static File WORK_DIR = new File("localFiles/");
 
     static int getPortNumberFromInputOrElseDefault(String[] args) {
         try {
@@ -28,12 +28,26 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         return DEFAULT_PORT_NUMBER;
     }
 
+    static ContextHandler getContextHandler(String path, Handler handler) {
+        var context = new ContextHandler();
+        context.setContextPath(path);
+        context.setHandler(handler);
+        return context;
+    }
+
+    static ContextHandlerCollection getEndpointsHandler() {
+        var endpoints = new ContextHandlerCollection();
+        endpoints.addHandler(getContextHandler("/webhook", new WebhookHandler()));
+        endpoints.addHandler(getContextHandler("/build/all", new BuildAllHandler()));
+        endpoints.addHandler(getContextHandler("/build", new BuildHandler()));
+        return endpoints;
+    }
 
     public static void main(String[] args) throws Exception {
         System.out.println("Starting up server...");
         var portNumber = getPortNumberFromInputOrElseDefault(args);
         var server = new Server(portNumber);
-        server.setHandler(new ContinuousIntegrationServer());
+        server.setHandler(getEndpointsHandler());
         server.start();
         System.out.println("Server has successfully started on port " + portNumber);
         try {
@@ -49,7 +63,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
                        Request baseRequest,
                        HttpServletRequest request,
                        HttpServletResponse response)
-            throws IOException, ServletException {
+            throws IOException {
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);

@@ -28,11 +28,15 @@ to make this work.
 
 #### Unit-tested
 
-We created a new branch called *test-github-api* were we pushed one sample
-commit. In our tests, we modify the commit status of this commit and check that
-we receive a response code of 201 (Created) from Github.
-We created one unit test per possible commit status update:
-*success*, *failure*, *error* and *pending*.
+We check most of the fields in the generated HTTP request to ensure that they contain valid values.
+The values that are valid are specified in [commits API](https://docs.github.com/en/rest/reference/commits#create-a-commit-status).
+We check the following parts of our HTTP request.
+- The URL path.
+- The HTTP method.
+- *Content-Type* and *Accept* headers.
+- Basic authorization credentials.
+- The JSON object stored in the HTTP body.
+
 
 ## Setup
 

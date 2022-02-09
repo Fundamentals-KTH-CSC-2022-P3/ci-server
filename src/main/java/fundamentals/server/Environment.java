@@ -31,7 +31,7 @@ public class Environment {
      */
     public static Environment getInstance(String filePath) {
         if (instance == null) {
-            parseEnvironmentFile(filePath);
+            loadEnvironmentFile(filePath);
         }
 
         return instance;
@@ -52,7 +52,7 @@ public class Environment {
      *
      * @param filePath the path to the environment file.
      */
-    private static void parseEnvironmentFile(String filePath) {
+    private static void loadEnvironmentFile(String filePath) {
         instance = new Environment();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {

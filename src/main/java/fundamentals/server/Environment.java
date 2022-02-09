@@ -11,7 +11,7 @@ import java.util.HashMap;
  * As for now, the ".env" file can only contain one key-value pair per line and the key should be separated from the value with a '='.
  * The ".env" file should never be added to a repository and can thereby safely contain values that must stay hidden such as Personal access tokens.
  * <p>
- * The {@code Environment} class is implemented using the Singleton pattern which means that the ".env" file gets parsed after
+ * The {@code Environment} class is implemented using the Singleton pattern which means that the ".env" file gets loaded after
  * the method {@code getInstance} has been called for the first time.
  */
 public class Environment {

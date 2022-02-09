@@ -48,7 +48,7 @@ public class Environment {
     }
 
     /**
-     * Creates an instance of the {@code Environment} class and parses the environment file.
+     * Creates an instance of the {@code Environment} class and loads the environment file from disk into main-memory.
      *
      * @param filePath the path to the environment file.
      */

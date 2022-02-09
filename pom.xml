@@ -39,11 +39,11 @@
             <version>11.0.6</version>
         </dependency>
 
-
+        <!-- https://mvnrepository.com/artifact/org.json/json -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20210307</version>
+            <version>20211205</version>
         </dependency>
     </dependencies>
 

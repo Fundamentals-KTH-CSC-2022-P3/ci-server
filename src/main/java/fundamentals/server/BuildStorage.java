@@ -131,7 +131,7 @@ public class BuildStorage {
 
         // Add the build to the array and also store the mapping from build ID -> array index.
         builds.put(build);
-        buildIDToArrayIndex.put(buildID, buildIDToArrayIndex.size() - 1);
+        buildIDToArrayIndex.put(buildID, buildIDToArrayIndex.size());
 
         return build;
     }

@@ -59,15 +59,16 @@ public class WebhookHandler extends AbstractHandler {
             System.out.println("Repository:" + repository);
             System.out.println("Owner:" + owner);
 
-            // TODO:
-            // Create a build ID, build date and set build status = pending. Store this in a JSON file and keep it in main-memory.
+            // Create a build ID, build date and set build status = pending. Store this in a JSONObject in main-memory.
             BuildStorage storage = BuildStorage.getInstance();
             JSONObject newBuild = storage.addNewBuild(commitHash, repository, owner);
 
+            // TODO:
             // Set the commit status to pending on Github.
             // On a background thread compile and test the repo.
-            // When the background thread is done, update build logs, build status, etc in the JSON file and main memory.
+            // When the background thread is done, update build logs, build status, etc in the JSONObject (main-memory).
             // Update the commit status on Github.
+            // Write the JSONObject to disk using the saveToDisk() method in the Storage class.
         }
     }
 }

@@ -50,17 +50,20 @@ public class WebhookHandler extends AbstractHandler {
 
             JSONObject root = new JSONObject(body.toString());
 
-            String commitSha = root.getString("after");
+            String commitHash = root.getString("after");
             String repository = root.getJSONObject("repository").getString("name");
             String owner = root.getJSONObject("repository").getJSONObject("owner").getString("name");
 
             System.out.println("Push event: ");
-            System.out.println("Commit:" + commitSha);
+            System.out.println("Commit:" + commitHash);
             System.out.println("Repository:" + repository);
             System.out.println("Owner:" + owner);
 
             // TODO:
             // Create a build ID, build date and set build status = pending. Store this in a JSON file and keep it in main-memory.
+            BuildStorage storage = BuildStorage.getInstance();
+            JSONObject newBuild = storage.addNewBuild(commitHash, repository, owner);
+
             // Set the commit status to pending on Github.
             // On a background thread compile and test the repo.
             // When the background thread is done, update build logs, build status, etc in the JSON file and main memory.

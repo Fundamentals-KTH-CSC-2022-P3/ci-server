@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -26,12 +27,20 @@ public class BuildHandler extends AbstractHandler {
             String buildID = target.substring(1);
             System.out.println("Build ID: " + buildID);
 
-            response.setContentType("application/json;charset=utf-8");
-            response.setStatus(HttpServletResponse.SC_OK);
-            baseRequest.setHandled(true);
-
-            // TODO:
             // Find the JSON object that has information about the requested build ID and return that.
+            BuildStorage storage = BuildStorage.getInstance();
+            JSONObject build = storage.getBuild(buildID);
+            if (build == null) {
+                response.setContentType("text/html;charset=utf-8");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                response.getWriter().println("A build with the ID \"" + buildID + "\" does not exist");
+            } else {
+                response.setContentType("application/json;charset=utf-8");
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.getWriter().println(build.toString());
+            }
+
+            baseRequest.setHandled(true);
         }
     }
 }

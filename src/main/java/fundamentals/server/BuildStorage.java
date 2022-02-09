@@ -98,6 +98,9 @@ public class BuildStorage {
         }
     }
 
+    // This class should not be instantiated from another class.
+    private BuildStorage() {}
+
     /**
      * Will add a new build to the array stored in main-memory. However, this call will not update the file on disk.
      * If you want to update the file on disk then you have to call {@code saveToDisk()} after you have
@@ -156,6 +159,15 @@ public class BuildStorage {
         int index = buildIDToArrayIndex.get(buildID);
 
         return builds.getJSONObject(index);
+    }
+
+    /**
+     * Returns the whole JSON array that contains information about all builds.
+     *
+     * @return an object of type {@code JSONArray} that contains information about all builds.
+     */
+    public JSONArray getAllBuilds() {
+        return builds;
     }
 
     /**

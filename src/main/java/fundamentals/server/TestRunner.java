@@ -9,88 +9,57 @@ import java.io.*;
  * If all tests are successful, this is printed on standard output.
  */
 public class TestRunner {
-    private String url;
-    private String branch;
-    private String repository;
-    private File localRepo;
-    private static final String ACCESS_TOKEN = "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";
-    private static final File WORK_DIR = new File("H:/tmp/");
+    private final RepoManager repoManager;
+    private final Runtime runtime = Runtime.getRuntime();
 
     /**
-     * Takes the payload provided by a GitHub push webhook and runs mvn test in the repository.
-     * @param payload the payload POST:ed by a GitHub webhook
-     * @throws JSONException if the payload is invalid. We assume that is follows this formatting:
-     *              https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#push
+     * Takes a RepoManager that is connected to the repo to test, and tests the repo, reporting any
+     * failures.
+     * @param repoManager the payload POST:ed by a GitHub webhook
      */
-    public TestRunner(String payload) throws JSONException {
-        JSONObject obj = new JSONObject(payload);
-        String strippedUrl = obj.getJSONObject("repository")
-                .getString("clone_url")
-                .substring("https://".length());
-        url = "https://" + ACCESS_TOKEN + "@" + strippedUrl;
-        branch = obj.getString("ref").substring("refs/heads/".length());
-        repository = obj.getJSONObject("repository").getString("name");
+    public TestRunner(RepoManager repoManager) {
+        this.repoManager = repoManager;
+    }
 
+    public void run() {
         runTests();
         checkTestResults();
-        cleanUp(localRepo);
     }
 
     private void runTests() {
-        String[] cloneCmd = {"git", "clone", url};
-        Runtime runtime = Runtime.getRuntime();
-        System.out.println("cloning");
-        try {
-            runtime.exec(cloneCmd, null, WORK_DIR).waitFor();
-        } catch (InterruptedException interruptedException) {
-            System.err.println("Could not wait for clone!");
-            interruptedException.printStackTrace();
-        } catch (IOException ioException) {
-            System.err.println("Error running git clone in " + WORK_DIR.getAbsolutePath());
-            ioException.printStackTrace();
-        }
-
-        localRepo = new File(WORK_DIR, repository);
-        String[] checkoutCmd = {"git", "checkout", branch};
-        System.out.println("checking out");
-        try {
-            runtime.exec(checkoutCmd, null, localRepo).waitFor();
-        } catch (InterruptedException interruptedException) {
-            System.err.println("Could not wait for checkout!");
-            interruptedException.printStackTrace();
-        } catch (IOException ioException) {
-            System.err.println("Error running git checkout in " + WORK_DIR.getAbsolutePath() + "/" + repository);
-            ioException.printStackTrace();
-        }
-
         String[] mavenCmd = {"mvn.cmd", "test"};
         System.out.println("running maven");
         try {
-            runtime.exec(mavenCmd, null, localRepo).waitFor();
+            runtime.exec(mavenCmd, null, repoManager.repoDir).waitFor();
         } catch (InterruptedException interruptedException) {
             System.err.println("Could not wait for mvn test!");
             interruptedException.printStackTrace();
         } catch (IOException ioException) {
-            System.err.println("Could not run maven test in " + WORK_DIR.getAbsolutePath());
+            System.err.println("Could not run maven test in " + repoManager.repoDir.getAbsolutePath());
             ioException.printStackTrace();
         }
-
-        System.out.println("Done with testing :^)!");
     }
 
-    private void checkTestResults() {
-        File testReportDirectory = new File(localRepo, "target/surefire-reports");
+    void checkTestResults() {
+        File testReportDirectory = new File(repoManager.repoDir, "target/surefire-reports");
         var files = testReportDirectory.listFiles((File f) -> f.getName().matches(".+\\.txt"));
         for (var file : files) {
             if (!testsInReportWereSuccessful(file)) {
+                // TODO: set status of remote repository to success
                 System.out.println("Tests failed!");
                 return;
             }
         }
+        // TODO: set status of remote repository to fail
         System.out.println("Tests were successful!");
     }
 
     private boolean testsInReportWereSuccessful(File report) {
+        // NOTE: this could be made more robust by parsing the XML file instead. I opted for the
+        // quick and dirty way of looking for the string "Failure: 0" in the human readable report for now.
+
+        // NOTE: We might want to gather more data about the tests, right now we get a boolean "Pass/Fail"
+        // and nothing more.
         BufferedReader reader;
         try {
             reader = new BufferedReader(new FileReader(report));
@@ -107,15 +76,5 @@ public class TestRunner {
             ioException.printStackTrace();
         }
         return result;
-    }
-
-    private void cleanUp(File file) {
-        File[] contents = file.listFiles();
-        if (contents != null) {
-            for (File f : contents) {
-                cleanUp(f);
-            }
-        }
-        file.delete();
     }
 }

@@ -9,6 +9,7 @@ import java.io.IOException;
  * This class deals with creating, managing, and deleting the local copies of the tested repositories.
  */
 public class RepoManager {
+    final File WORK_DIR = new File("localFiles/");
     final File parentDir;
     final File repoDir;
 
@@ -22,9 +23,8 @@ public class RepoManager {
     /**
      * Create a RepoManager that manages the specified repository.
      * @param payload The payload provided by the GitHub webhook
-     * @param workDir The working directory, to where the repos are cloned
      */
-    public RepoManager(String payload, File workDir) throws IOException {
+    public RepoManager(String payload) throws IOException {
         JSONObject obj = new JSONObject(payload);
         String strippedUrl = obj.getJSONObject("repository")
                 .getString("clone_url")
@@ -34,12 +34,27 @@ public class RepoManager {
         String repositoryName = obj.getJSONObject("repository").getString("name");
 
 
-        parentDir = new File(workDir, Long.toString(System.nanoTime()));
+        parentDir = new File(WORK_DIR, Long.toString(System.nanoTime()));
         if (!parentDir.mkdirs()) {
             throw new IOException("Could not create parent directory");
         }
 
         repoDir = new File(parentDir, repositoryName);
+    }
+
+    /**
+     * Constructor used for testing, since we don't want to have to provide a valid JSON blob for each
+     * test, necessarily.
+     */
+    RepoManager () throws IOException {
+        parentDir = new File(WORK_DIR,"parentDir");
+        repoDir = new File(parentDir, "repoDir");
+        if (!repoDir.mkdirs()) {
+            throw new IOException("Could not create parent directory");
+        }
+
+        branchName = "branchName"; // Needs placeholder because it is final
+        repoUrl = "repoUrl"; // Needs placeholder because it is final
     }
 
     /**
@@ -82,7 +97,7 @@ public class RepoManager {
      * Deletes the parent directory and all contents of the parent directory.
      */
     public void cleanUp() {
-        deleteDirectory(parentDir);
+        deleteDirectory(WORK_DIR);
     }
 
     /**
@@ -96,6 +111,7 @@ public class RepoManager {
                 deleteDirectory(f);
             }
         }
-        file.delete();
+        if (!file.delete())
+            System.out.println("could not delete");;
     }
 }

@@ -11,25 +11,29 @@ import java.util.UUID;
 
 public class BuildStorage {
 
-    public static final String BUILD_STORAGE_FILE = "builds.json";
+    public static final String DEFAULT_BUILD_STORAGE_FILE = "builds.json";
 
     private static BuildStorage instance;
 
     private JSONArray builds;
 
-    public static BuildStorage getInstance() {
+    public static BuildStorage getInstance(String filePath) {
         if (instance == null) {
-            loadBuildStorageFile();
+            loadBuildStorageFile(filePath);
         }
 
         return instance;
     }
 
-    private static void loadBuildStorageFile() {
+    public static BuildStorage getInstance() {
+        return getInstance(DEFAULT_BUILD_STORAGE_FILE);
+    }
+
+    private static void loadBuildStorageFile(String filePath) {
         instance = new BuildStorage();
 
         // Read the builds from disk into main-memory.
-        try (BufferedReader reader = new BufferedReader(new FileReader(BUILD_STORAGE_FILE, StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath, StandardCharsets.UTF_8))) {
             StringBuilder jsonText = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -38,7 +42,7 @@ public class BuildStorage {
             instance.builds = new JSONArray(jsonText.toString());
         } catch (FileNotFoundException e) {
             // Builds file does not exist. Create a builds.json file with an empty array inside.
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(BUILD_STORAGE_FILE, StandardCharsets.UTF_8))){
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, StandardCharsets.UTF_8))){
                 writer.write("[]");
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -48,10 +52,10 @@ public class BuildStorage {
         }
     }
 
-    public JSONObject addNewBuild(String commitSha, String repository, String owner) {
+    public JSONObject addNewBuild(String commitHash, String repository, String owner) {
         JSONObject build = new JSONObject();
         build.put("build_id", UUID.randomUUID());
-        build.put("commit", commitSha);
+        build.put("commit", commitHash);
         build.put("repository", repository);
         build.put("owner", owner);
         build.put("build_started", Instant.now().toString());

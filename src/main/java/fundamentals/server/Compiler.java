@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class Compiler {
     private final RepoManager repoManager;
-    private final String[] compileCmd = new String[]{"mvn.cmd", "compile"};
+    private final String[] compileCmd = new String[]{"mvn", "compile"};
 
     public Compiler(RepoManager repoManager) {
         this.repoManager = repoManager;

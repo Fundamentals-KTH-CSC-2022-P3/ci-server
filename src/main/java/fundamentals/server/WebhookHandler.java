@@ -15,12 +15,11 @@ import java.io.InputStreamReader;
 public class WebhookHandler extends AbstractHandler {
 
     private final BuildStorage storage;
+    private final Environment environment;
 
-    private final Environment env;
-
-    public WebhookHandler(Environment env, BuildStorage storage) {
+    public WebhookHandler(Environment environment, BuildStorage storage) {
         this.storage = storage;
-        this.env = env;
+        this.environment = environment;
     }
 
     @Override
@@ -71,8 +70,20 @@ public class WebhookHandler extends AbstractHandler {
 
             // Create a build ID, build date and set build status = pending. Store this in a JSONObject in main-memory.
             JSONObject newBuild = storage.addNewBuild(owner, repository, commitHash);
+            String buildID = newBuild.getString("build_id");
 
-            RepoManager manager = new RepoManager(body.toString(), env);
+            String username = environment.getValue("USERNAME");
+            String personalAccessToken = environment.getValue("PERSONAL_ACCESS_TOKEN");
+            GithubCommitAPI api = new GithubCommitAPI(owner, repository, commitHash, username, personalAccessToken);
+            GithubCommitAPIRequest apiRequest = api.setCommitStatusPending("Compiling and running tests...", "http://localhost/build/" + buildID);
+
+            if (apiRequest.send()) {
+                System.out.println("Updated commit status to pending for commit: " + commitHash);
+            } else {
+                System.out.println("Failed to update commit status for: " + commitHash);
+            }
+
+            RepoManager manager = new RepoManager(body.toString(), environment);
             Compiler compiler = new Compiler(manager.repoDir, new Bash());
             Tester tester = new Tester(manager.repoDir, new Bash());
 
@@ -98,7 +109,6 @@ public class WebhookHandler extends AbstractHandler {
             manager.cleanUp();
 
             // TODO:
-            // Set the commit status to pending on Github.
             // On a background thread compile and test the repo.
             // When the background thread is done, update build logs, build status, etc in the JSONObject (main-memory).
             // Update the commit status on Github.

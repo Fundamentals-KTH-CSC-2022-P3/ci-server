@@ -15,8 +15,11 @@ public class WebhookHandler extends AbstractHandler {
 
     private final BuildStorage storage;
 
-    public WebhookHandler(BuildStorage storage) {
+    private final Environment env;
+
+    public WebhookHandler(Environment env, BuildStorage storage) {
         this.storage = storage;
+        this.env = env;
     }
 
     @Override

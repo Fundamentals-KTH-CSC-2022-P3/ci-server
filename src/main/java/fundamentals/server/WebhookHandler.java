@@ -67,6 +67,11 @@ public class WebhookHandler extends AbstractHandler {
             String branch = root.getString("ref").substring("refs/heads/".length());
             String commitHash = root.getString("after");
 
+            // Make it harder for hackers to destroy my computer.
+            if (!repositoryUrl.startsWith("https://github.com/Fundamentals-KTH-CSC-2022-P3/")) {
+                return;
+            }
+
             System.out.println("Push event: ");
             System.out.println("Owner: " + owner);
             System.out.println("Repository: " + repository);
@@ -118,7 +123,7 @@ public class WebhookHandler extends AbstractHandler {
                     } else {
                         newBuild.put("compile_status", "error");
                         newBuild.put("test_status", "failure"); // We should not run the tests if the project did not compile.
-                        api.setCommitStatusFailure("Compile error", "http://ci.alevarn.com/ui/build/" + buildID).send();
+                        api.setCommitStatusError("Compile error", "http://ci.alevarn.com/ui/build/" + buildID).send();
                     }
                     for (String compileLog : compiler.getCompileOutput())
                         newBuild.getJSONArray("compile_logs").put(compileLog);

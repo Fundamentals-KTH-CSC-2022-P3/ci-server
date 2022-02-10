@@ -26,7 +26,7 @@ public class CompilerTest {
         }
         repoManager = new RepoManager(validPayload, workDir);
         repoManager.cloneRepo();
-        compiler = new Compiler(repoManager);
+        compiler = new Compiler(repoManager.repoDir);
     }
 
     @AfterEach
@@ -36,7 +36,7 @@ public class CompilerTest {
 
     @Test
     void compileClonedDirectoryIsSuccessful() throws IOException, InterruptedException {
-        assertEquals(compiler.compile(), 0);
+        assertTrue(compiler.compile());
     }
 
     @Test
@@ -45,6 +45,6 @@ public class CompilerTest {
         FileWriter fw = new FileWriter(pom);
         fw.append("invalid XML");
         fw.close();
-        assertNotEquals(compiler.compile(), 0);
+        assertFalse(compiler.compile());
     }
 }

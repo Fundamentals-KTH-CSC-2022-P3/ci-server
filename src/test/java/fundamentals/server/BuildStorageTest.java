@@ -52,7 +52,7 @@ public class BuildStorageTest {
      */
     @Test
     @DisplayName("Can retrieve the correct build information test")
-    void retrieveKeyValuePairsFromEnvironmentTest() {
+    void retrieveCorrectBuildInformationTest() {
         BuildStorage storage = BuildStorage.loadBuildStorageFile(BUILDS_TEST_FILE);
 
         JSONObject build1 = storage.getBuild("9ff81d98-ee33-444c-991c-8005fd6f7b62");

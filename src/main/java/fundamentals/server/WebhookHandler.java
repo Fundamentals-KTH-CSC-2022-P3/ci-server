@@ -63,9 +63,9 @@ public class WebhookHandler extends AbstractHandler {
             String commitHash = root.getString("after");
 
             System.out.println("Push event: ");
-            System.out.println("Owner:" + owner);
-            System.out.println("Repository:" + repository);
-            System.out.println("Commit:" + commitHash);
+            System.out.println("Owner: " + owner);
+            System.out.println("Repository: " + repository);
+            System.out.println("Commit: " + commitHash);
 
             // Create a build ID, build date and set build status = pending. Store this in a JSONObject in main-memory.
             JSONObject newBuild = storage.addNewBuild(owner, repository, commitHash);
@@ -75,7 +75,7 @@ public class WebhookHandler extends AbstractHandler {
             String username = environment.getValue("USERNAME");
             String personalAccessToken = environment.getValue("PERSONAL_ACCESS_TOKEN");
             GithubCommitAPI api = new GithubCommitAPI(owner, repository, commitHash, username, personalAccessToken);
-            GithubCommitAPIRequest apiRequest = api.setCommitStatusPending("Compiling and running tests...", "http://localhost/build/" + buildID);
+            GithubCommitAPIRequest apiRequest = api.setCommitStatusPending("Compiling and running tests...", "");
 
             if (apiRequest.send()) {
                 System.out.println("Updated commit status to pending for commit: " + commitHash);

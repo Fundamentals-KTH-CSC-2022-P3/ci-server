@@ -2,3 +2,4 @@
 /target/
 builds.json
 .env
+ci-builds

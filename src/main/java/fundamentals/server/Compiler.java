@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 public class Compiler {
     private final File repoDir;
-    private final String[] compileCmd = new String[]{"mvn", "compile"};
+    private final String[] compileCmd = new String[]{"mvn.cmd", "compile"};
     private List<String> compileOutput;
 
     public Compiler(File repoDir) {

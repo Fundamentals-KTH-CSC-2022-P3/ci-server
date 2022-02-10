@@ -14,9 +14,11 @@ import java.io.InputStreamReader;
 public class WebhookHandler extends AbstractHandler {
 
     private final BuildStorage storage;
+    private final Environment environment;
 
-    public WebhookHandler(BuildStorage storage) {
+    public WebhookHandler(BuildStorage storage, Environment environment) {
         this.storage = storage;
+        this.environment = environment;
     }
 
     @Override
@@ -67,9 +69,21 @@ public class WebhookHandler extends AbstractHandler {
 
             // Create a build ID, build date and set build status = pending. Store this in a JSONObject in main-memory.
             JSONObject newBuild = storage.addNewBuild(owner, repository, commitHash);
+            String buildID = newBuild.getString("build_id");
+
+            // Set the commit status to pending on Github.
+            String username = environment.getValue("USERNAME");
+            String personalAccessToken = environment.getValue("PERSONAL_ACCESS_TOKEN");
+            GithubCommitAPI api = new GithubCommitAPI(owner, repository, commitHash, username, personalAccessToken);
+            GithubCommitAPIRequest apiRequest = api.setCommitStatusPending("Compiling and running tests...", "http://localhost/build/" + buildID);
+
+            if (apiRequest.send()) {
+                System.out.println("Updated commit status to pending for commit: " + commitHash);
+            } else {
+                System.out.println("Failed to update commit status for: " + commitHash);
+            }
 
             // TODO:
-            // Set the commit status to pending on Github.
             // On a background thread compile and test the repo.
             // When the background thread is done, update build logs, build status, etc in the JSONObject (main-memory).
             // Update the commit status on Github.

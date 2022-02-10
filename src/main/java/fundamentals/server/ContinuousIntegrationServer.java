@@ -9,6 +9,7 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 public class ContinuousIntegrationServer {
 
     final static int DEFAULT_PORT_NUMBER = 8014;
+    final static Environment environment = Environment.loadEnvironmentFile();
     final static BuildStorage storage = BuildStorage.loadBuildStorageFile();
 
     static int getPortNumberFromInputOrElseDefault(String[] args) {
@@ -32,7 +33,7 @@ public class ContinuousIntegrationServer {
 
     static ContextHandlerCollection getEndpointsHandler() {
         var endpoints = new ContextHandlerCollection();
-        endpoints.addHandler(getContextHandler("/webhook", new WebhookHandler(storage)));
+        endpoints.addHandler(getContextHandler("/webhook", new WebhookHandler(storage, environment)));
         endpoints.addHandler(getContextHandler("/build/all", new BuildAllHandler(storage)));
         endpoints.addHandler(getContextHandler("/build", new BuildHandler(storage)));
         endpoints.addHandler(getContextHandler("/ui/build/all", new UIBuildAllHandler()));

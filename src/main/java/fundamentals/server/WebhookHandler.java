@@ -8,6 +8,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -60,11 +61,15 @@ public class WebhookHandler extends AbstractHandler {
 
             String owner = root.getJSONObject("repository").getJSONObject("owner").getString("name");
             String repository = root.getJSONObject("repository").getString("name");
+            String repositoryUrl = root.getJSONObject("repository").getString("clone_url");
+            String branch = root.getString("ref");
             String commitHash = root.getString("after");
 
             System.out.println("Push event: ");
             System.out.println("Owner: " + owner);
             System.out.println("Repository: " + repository);
+            System.out.println("Repository url: " + repositoryUrl);
+            System.out.println("Branch: " + branch);
             System.out.println("Commit: " + commitHash);
 
             // Create a build ID, build date and set build status = pending. Store this in a JSONObject in main-memory.
@@ -82,6 +87,9 @@ public class WebhookHandler extends AbstractHandler {
             } else {
                 System.out.println("Failed to update commit status for: " + commitHash);
             }
+
+            RepoManager repoManager = new RepoManager(repositoryUrl, repository, branch, new File("ci-builds"), personalAccessToken);
+            repoManager.cloneRepo();
 
             // TODO:
             // On a background thread compile and test the repo.

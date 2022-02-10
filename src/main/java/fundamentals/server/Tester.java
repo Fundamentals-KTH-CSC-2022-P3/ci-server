@@ -2,7 +2,7 @@ package fundamentals.server;
 
 import fundamentals.server.helpers.Bash;
 
-import java.io.*;
+import java.io.File;
 
 /**
  * Takes the POST:ed payload string from a GitHub push webhook and clones the repository specified in the payload.

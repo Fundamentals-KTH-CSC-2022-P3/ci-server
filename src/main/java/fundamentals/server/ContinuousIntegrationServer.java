@@ -1,16 +1,16 @@
 package fundamentals.server;
 
+import fundamentals.server.handlers.BuildAllHandler;
+import fundamentals.server.handlers.BuildHandler;
+import fundamentals.server.handlers.WebhookHandler;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
-import org.eclipse.jetty.security.HashLoginService;
-import org.eclipse.jetty.security.UserStore;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.util.security.Constraint;
-import org.eclipse.jetty.util.security.Credential;
 
 import java.util.Collections;
 

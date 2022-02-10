@@ -1,4 +1,4 @@
-package fundamentals.server;
+package fundamentals.server.helpers;
 
 import fundamentals.server.helpers.Bash;
 

@@ -1,5 +1,7 @@
 package fundamentals.server;
 
+import fundamentals.server.gitTooling.GithubCommitAPI;
+import fundamentals.server.gitTooling.GithubCommitAPIRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

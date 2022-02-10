@@ -1,4 +1,4 @@
-package fundamentals.server;
+package fundamentals.server.gitTooling;
 
 import org.json.JSONException;
 import org.junit.jupiter.api.AfterAll;
@@ -10,9 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,8 +1,14 @@
 package fundamentals.server;
 
 import org.json.JSONObject;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,7 +17,21 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class BuildStorageTest {
 
+    private static final String BUILDS_TEST_FILE_TEMPLATE = "src/test/res/builds.template.json";
+
     private static final String BUILDS_TEST_FILE = "src/test/res/builds.test.json";
+
+    @BeforeEach
+    private void setUp() throws Exception {
+        System.out.println("SetUp");
+        Files.copy(new File(BUILDS_TEST_FILE_TEMPLATE).toPath(), new File(BUILDS_TEST_FILE).toPath(), StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    @AfterEach
+    private void tearDown() throws Exception {
+        System.out.println("Teardown");
+        Files.delete(new File(BUILDS_TEST_FILE).toPath());
+    }
 
     /**
      * Ensure that it is possible to retrieve existing builds from the builds file on disk.

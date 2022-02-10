@@ -14,7 +14,9 @@ import org.eclipse.jetty.util.security.Constraint;
 
 import java.util.Collections;
 
-
+/**
+ * The main class of the CI-server. Handles starting the server and setting up the handlers for the endpoints.
+ */
 public class ContinuousIntegrationServer {
 
     final static int DEFAULT_PORT_NUMBER = 8014;
@@ -69,6 +71,11 @@ public class ContinuousIntegrationServer {
         return endpoints;
     }
 
+    /**
+     * Start the server, simple as.
+     * @param args the port number can be specified in args. If none is given, DEFAULT_PORT_NUMBER is used.
+     * @throws Exception if the server is interrupted.
+     */
     public static void main(String[] args) throws Exception {
         System.out.println("Starting up server...");
         var portNumber = getPortNumberFromInputOrElseDefault(args);

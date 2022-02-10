@@ -72,7 +72,7 @@ public class BuildStorage {
     }
 
     /**
-     * Creates an instance of the {@code BuildStorage} class and loads the builds file from disk into main-memory.
+     * Creates an instance of the {@code BuildStorage} class and loads the builds file "builds.json" from disk into main-memory.
      */
     public static BuildStorage loadBuildStorageFile() {
         return loadBuildStorageFile(DEFAULT_BUILD_STORAGE_FILE);

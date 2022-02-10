@@ -65,6 +65,14 @@ public class Environment {
         return loadEnvironmentFile(DEFAULT_ENVIRONMENT_FILE);
     }
 
+    public static String loadEnvironmentVariableOrElse(String environmentVariableName, String orElse) {
+        var sysVariable  = System.getenv(environmentVariableName);
+        if (sysVariable == null) {
+            return orElse;
+        }
+        return sysVariable;
+    }
+
     // We want the programmer to use loadEnvironmentFile() to create an instance of this class and never the constructor.
     private Environment() {
     }

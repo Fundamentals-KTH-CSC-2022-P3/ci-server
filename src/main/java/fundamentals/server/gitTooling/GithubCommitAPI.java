@@ -1,4 +1,4 @@
-package fundamentals.server;
+package fundamentals.server.gitTooling;
 
 import org.json.JSONObject;
 

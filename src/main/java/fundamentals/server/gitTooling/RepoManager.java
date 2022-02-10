@@ -1,5 +1,6 @@
-package fundamentals.server;
+package fundamentals.server.gitTooling;
 
+import fundamentals.server.Environment;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -95,7 +96,7 @@ public class RepoManager {
     /**
      * Checks out to the branch specified in the payload given in the constructor.
      */
-    void checkoutBranch() {
+    public void checkoutBranch() {
         String[] checkoutCmd = {"git", "checkout", branchName};
         System.out.println("checking out");
         try {
@@ -128,5 +129,17 @@ public class RepoManager {
             }
         }
         file.delete();
+    }
+
+    public File getWorkDir() {
+        return workDir;
+    }
+
+    public File getParentDir() {
+        return parentDir;
+    }
+
+    public File getRepoDir() {
+        return repoDir;
     }
 }

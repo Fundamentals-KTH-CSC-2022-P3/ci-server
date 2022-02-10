@@ -66,7 +66,8 @@ public class Environment {
     }
 
     // We want the programmer to use loadEnvironmentFile() to create an instance of this class and never the constructor.
-    private Environment() {}
+    private Environment() {
+    }
 
     /**
      * Will return the associated value for a given key.

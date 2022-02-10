@@ -21,13 +21,13 @@ public class BuildStorage {
     // The build ID is a universally unique identifier (UUID).
     // If we don't want to do a linear search when the user asks for information about a build with a certain build ID,
     // then we should keep a lookup table that maps each build ID to an array index.
-    private HashMap<String, Integer> buildIDToArrayIndex = new HashMap<>();
+    private final HashMap<String, Integer> buildIDToArrayIndex = new HashMap<>();
+
+    // The path to the file where we should save all our builds.
+    private final String filePath;
 
     // All the builds are stored here.
     private JSONArray builds;
-
-    // The path to the file where we should save all our builds.
-    private String filePath;
 
     /**
      * Creates an instance of the {@code BuildStorage} class and loads the builds file from disk into main-memory.
@@ -37,8 +37,7 @@ public class BuildStorage {
      * @param filePath the path to the builds file.
      */
     public static BuildStorage loadBuildStorageFile(String filePath) {
-        BuildStorage storage = new BuildStorage();
-        storage.filePath = filePath;
+        BuildStorage storage = new BuildStorage(filePath);
 
         // Read the builds from disk into main-memory.
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath, StandardCharsets.UTF_8))) {
@@ -80,7 +79,8 @@ public class BuildStorage {
     }
 
     // We want the programmer to use loadBuildStorageFile() to create an instance of this class and never the constructor.
-    private BuildStorage() {
+    private BuildStorage(String filePath) {
+        this.filePath = filePath;
     }
 
     /**
@@ -93,7 +93,7 @@ public class BuildStorage {
      * @param owner      the owner of the repository.
      * @return an object of type {@code JSONObject} that contains information about the current build.
      */
-    public JSONObject addNewBuild(String commitHash, String repository, String owner) {
+    public synchronized JSONObject addNewBuild(String commitHash, String repository, String owner) {
         JSONObject build = new JSONObject();
 
         // Generate a unique identifier for this build.
@@ -105,7 +105,7 @@ public class BuildStorage {
         build.put("repository", repository);
         build.put("owner", owner);
         build.put("build_started", Instant.now().toString());
-        build.put("build_ended", "Still running");
+        build.put("build_ended", "not yet");
         build.put("compile_status", "pending");
         build.put("test_status", "pending");
         build.put("compile_logs", new JSONArray());

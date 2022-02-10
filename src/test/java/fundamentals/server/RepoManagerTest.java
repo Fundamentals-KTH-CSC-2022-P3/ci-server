@@ -61,9 +61,10 @@ public class RepoManagerTest {
         branchProcess = Runtime.getRuntime().exec(checkExistingBranchesCmd, null, repoManager.repoDir);
         reader = new BufferedReader(new InputStreamReader(branchProcess.getInputStream()));
         String selectedBranchPattern = ".*" + newBranchName + ".*";
+        branchProcess.waitFor();
 
         List<String> s = reader.lines().toList();
-        System.out.println(s);
+        System.out.println("Output of git branch: " + s);
         boolean result = s.stream().anyMatch(line -> line.matches(selectedBranchPattern));
 
         assertTrue(result);

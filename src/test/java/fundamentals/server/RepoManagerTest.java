@@ -9,6 +9,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -59,6 +62,10 @@ public class RepoManagerTest {
         reader = new BufferedReader(new InputStreamReader(branchProcess.getInputStream()));
         String selectedBranchPattern = ".*" + newBranchName + ".*";
 
-        assertTrue(reader.lines().anyMatch(line -> line.matches(selectedBranchPattern)));
+        List<String> s = reader.lines().toList();
+        System.out.println(s);
+        boolean result = s.stream().anyMatch(line -> line.matches(selectedBranchPattern));
+
+        assertTrue(result);
     }
 }

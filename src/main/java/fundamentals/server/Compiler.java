@@ -1,12 +1,14 @@
 package fundamentals.server;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Compiler {
     private final File repoDir;
     private final String[] compileCmd = new String[]{"mvn", "compile"};
-    private String compileOutput;
+    private List<String> compileOutput;
 
     public Compiler(File repoDir) {
         this.repoDir = repoDir;
@@ -22,7 +24,7 @@ public class Compiler {
         Process compileProcess = Runtime.getRuntime().exec(compileCmd, null, repoDir);
         BufferedReader reader = new BufferedReader(new InputStreamReader(compileProcess.getInputStream()));
         compileProcess.waitFor();
-        compileOutput = reader.lines().collect(Collectors.joining("\n"));
+        compileOutput = reader.lines().toList();
 
         int exitValue = compileProcess.exitValue();
         if (exitValue == 0) {
@@ -33,7 +35,7 @@ public class Compiler {
         return exitValue == 0;
     }
 
-    public String getCompileOutput() {
+    public List<String> getCompileOutput() {
         return compileOutput;
     }
 }

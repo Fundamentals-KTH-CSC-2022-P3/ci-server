@@ -92,11 +92,20 @@ Set up a run and debug config by:
   - Marcus Alevärn
 - Managing the local repository
   - Arvid Siberov
+- Compiling project
+  - Ludwig Kristoffersson
+  - Arvid Siberov
 - Running tests
   - Arvid Siberov
   - Katrina Liang
   - Ludwig Kristoffersson
 - Writing Essence report
   - Katrina Liang
+- Authentication
+  - Samuel Philipson
 - Code review, planning and issue creation
-  - Everyone
+  - Marcus Alevärn
+  - Ludwig Kristoffersson
+  - Katrina Liang
+  - Samuel Philipson
+  - Arvid Siberov

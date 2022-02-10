@@ -73,7 +73,7 @@ public class WebhookHandler extends AbstractHandler {
 
             // Set the commit status to pending on Github.
             String username = environment.getValue("USERNAME");
-            String personalAccessToken  = environment.getValue("PERSONAL_ACCESS_TOKEN");
+            String personalAccessToken = environment.getValue("PERSONAL_ACCESS_TOKEN");
             GithubCommitAPI api = new GithubCommitAPI(owner, repository, commitHash, username, personalAccessToken);
             GithubCommitAPIRequest apiRequest = api.setCommitStatusPending("Compiling and running tests...", "http://localhost/build/" + buildID);
 

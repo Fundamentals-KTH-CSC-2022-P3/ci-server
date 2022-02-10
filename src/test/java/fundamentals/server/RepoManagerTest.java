@@ -57,7 +57,7 @@ public class RepoManagerTest {
 
         branchProcess = Runtime.getRuntime().exec(checkExistingBranchesCmd, null, repoManager.repoDir);
         reader = new BufferedReader(new InputStreamReader(branchProcess.getInputStream()));
-        String selectedBranchPattern = "\\* " + newBranchName;
+        String selectedBranchPattern = ".*" + newBranchName + ".*";
 
         assertTrue(reader.lines().anyMatch(line -> line.matches(selectedBranchPattern)));
     }

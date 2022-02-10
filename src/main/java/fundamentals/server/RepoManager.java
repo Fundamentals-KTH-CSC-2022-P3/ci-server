@@ -9,6 +9,7 @@ import java.io.IOException;
  * This class deals with creating, managing, and deleting the local copies of the tested repositories.
  */
 public class RepoManager {
+    final File workDir = new File("localFiles/");
     final File parentDir;
     final File repoDir;
 
@@ -22,9 +23,8 @@ public class RepoManager {
     /**
      * Create a RepoManager that manages the specified repository.
      * @param payload The payload provided by the GitHub webhook
-     * @param workDir The working directory, to where the repos are cloned
      */
-    public RepoManager(String payload, File workDir) throws IOException {
+    public RepoManager(String payload) throws IOException {
         JSONObject obj = new JSONObject(payload);
         String strippedUrl = obj.getJSONObject("repository")
                 .getString("clone_url")

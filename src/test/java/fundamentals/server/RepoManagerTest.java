@@ -15,26 +15,21 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RepoManagerTest {
     private static final String validPayload = "{\"ref\": \"refs/heads/main\",\"repository\": {\"name\": \"ci-server\",\"clone_url\": \"https://github.com/Fundamentals-KTH-CSC-2022-P3/ci-server.git\",}}\n";
     private static final String invalidPayload = "{}";
-    private static File workDir;
     private static RepoManager repoManager;
 
     @BeforeAll
     static void setup() throws IOException {
-        workDir = new File("testWorkDir/");
-        if (!workDir.exists())
-            assertTrue(workDir.mkdir());
-
-        repoManager = new RepoManager(validPayload, workDir);
+        repoManager = new RepoManager(validPayload);
     }
 
     @AfterAll
     static void tearDown() {
-        RepoManager.deleteDirectory(workDir);
+        RepoManager.deleteDirectory(repoManager.workDir);
     }
 
     @Test
-    void repoManagerWithInvalidPayloadThrowsException() throws IOException {
-        assertThrows(JSONException.class, () -> new RepoManager(invalidPayload, workDir));
+    void repoManagerWithInvalidPayloadThrowsException() {
+        assertThrows(JSONException.class, () -> new RepoManager(invalidPayload));
     }
 
     @Test
@@ -54,7 +49,7 @@ public class RepoManagerTest {
         repoManager.cloneRepo();
         String newBranchName = "name-of-branch-to-be-created-that-does-not-already-exist";
         String[] checkExistingBranchesCmd = new String[]{"git", "branch"};
-        Process branchProcess = Runtime.getRuntime().exec(checkExistingBranchesCmd, null, workDir);
+        Process branchProcess = Runtime.getRuntime().exec(checkExistingBranchesCmd, null, repoManager.workDir);
         BufferedReader reader = new BufferedReader(new InputStreamReader(branchProcess.getInputStream()));
         branchProcess.waitFor();
         assertFalse(reader.lines().anyMatch(line -> line.matches("\\.*" + newBranchName + "\\.*")));

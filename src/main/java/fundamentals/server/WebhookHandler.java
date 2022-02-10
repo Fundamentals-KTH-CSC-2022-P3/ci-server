@@ -83,7 +83,7 @@ public class WebhookHandler extends AbstractHandler {
                 System.out.println("Failed to update commit status for: " + commitHash);
             }
 
-            RepoManager manager = new RepoManager(body.toString(), env);
+            RepoManager manager = new RepoManager(body.toString(), environment);
             Tester tester = new Tester(manager.repoDir, new Bash());
 
             manager.cloneRepo();

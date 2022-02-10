@@ -13,9 +13,11 @@ import java.io.InputStreamReader;
 
 public class WebhookHandler extends AbstractHandler {
 
+    private final BuildStorage storage;
     private final Environment environment;
 
-    public WebhookHandler(Environment environment) {
+    public WebhookHandler(BuildStorage storage, Environment environment) {
+        this.storage = storage;
         this.environment = environment;
     }
 
@@ -56,33 +58,36 @@ public class WebhookHandler extends AbstractHandler {
 
             JSONObject root = new JSONObject(body.toString());
 
-            String commitSha = root.getString("after");
-            String repository = root.getJSONObject("repository").getString("name");
             String owner = root.getJSONObject("repository").getJSONObject("owner").getString("name");
+            String repository = root.getJSONObject("repository").getString("name");
+            String commitHash = root.getString("after");
 
             System.out.println("Push event: ");
-            System.out.println("Commit:" + commitSha);
-            System.out.println("Repository:" + repository);
             System.out.println("Owner:" + owner);
+            System.out.println("Repository:" + repository);
+            System.out.println("Commit:" + commitHash);
 
-            // TODO:
-            // Create a build ID, build date and set build status = pending. Store this in a JSON file and keep it in main-memory.
+            // Create a build ID, build date and set build status = pending. Store this in a JSONObject in main-memory.
+            JSONObject newBuild = storage.addNewBuild(owner, repository, commitHash);
+            String buildID = newBuild.getString("build_id");
 
             // Set the commit status to pending on Github.
             String username = environment.getValue("USERNAME");
             String personalAccessToken  = environment.getValue("PERSONAL_ACCESS_TOKEN");
-            GithubCommitAPI api = new GithubCommitAPI(owner, repository, commitSha, username, personalAccessToken);
-            GithubCommitAPIRequest apiRequest = api.setCommitStatusPending("Compiling and running tests...", "");
+            GithubCommitAPI api = new GithubCommitAPI(owner, repository, commitHash, username, personalAccessToken);
+            GithubCommitAPIRequest apiRequest = api.setCommitStatusPending("Compiling and running tests...", "http://localhost/build/" + buildID);
 
             if (apiRequest.send()) {
-                System.out.println("Updated commit status to pending for commit: " + commitSha);
+                System.out.println("Updated commit status to pending for commit: " + commitHash);
             } else {
-                System.out.println("Failed to update commit status for: " + commitSha);
+                System.out.println("Failed to update commit status for: " + commitHash);
             }
 
+            // TODO:
             // On a background thread compile and test the repo.
-            // When the background thread is done, update build logs, build status, etc in the JSON file and main memory.
+            // When the background thread is done, update build logs, build status, etc in the JSONObject (main-memory).
             // Update the commit status on Github.
+            // Write the JSONObject to disk using the saveToDisk() method in the Storage class.
         }
     }
 }

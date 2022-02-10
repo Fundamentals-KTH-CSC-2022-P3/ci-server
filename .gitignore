@@ -1,3 +1,4 @@
 /.idea/
 /target/
+builds.json
 .env

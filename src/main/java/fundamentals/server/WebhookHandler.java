@@ -1,5 +1,6 @@
 package fundamentals.server;
 
+import fundamentals.server.helpers.Bash;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,8 +16,11 @@ public class WebhookHandler extends AbstractHandler {
 
     private final BuildStorage storage;
 
-    public WebhookHandler(BuildStorage storage) {
+    private final Environment env;
+
+    public WebhookHandler(Environment env, BuildStorage storage) {
         this.storage = storage;
+        this.env = env;
     }
 
     @Override
@@ -67,6 +71,20 @@ public class WebhookHandler extends AbstractHandler {
 
             // Create a build ID, build date and set build status = pending. Store this in a JSONObject in main-memory.
             JSONObject newBuild = storage.addNewBuild(owner, repository, commitHash);
+
+            RepoManager manager = new RepoManager(body.toString(), env);
+            Tester tester = new Tester(manager.repoDir, new Bash());
+
+            manager.cloneRepo();
+            manager.checkoutBranch();
+            Boolean successful = tester.run();
+            manager.cleanUp();
+
+            if (successful) {
+                System.out.println("testsuite executed without any failures");
+            } else {
+                System.out.println("testsuite failed");
+            }
 
             // TODO:
             // Set the commit status to pending on Github.

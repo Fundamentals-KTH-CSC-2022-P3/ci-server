@@ -13,7 +13,7 @@ public class RepoManager {
     final File parentDir;
     final File repoDir;
 
-    private static final String ACCESS_TOKEN = "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";
+    private final String accessToken;
 
     private final Runtime runtime = Runtime.getRuntime();
 
@@ -24,12 +24,13 @@ public class RepoManager {
      * Create a RepoManager that manages the specified repository.
      * @param payload The payload provided by the GitHub webhook
      */
-    public RepoManager(String payload) throws IOException {
+    public RepoManager(String payload, Environment environment) throws IOException {
+        accessToken = environment.getValue("ACCESS_TOKEN");
         JSONObject obj = new JSONObject(payload);
         String strippedUrl = obj.getJSONObject("repository")
                 .getString("clone_url")
                 .substring("https://".length());
-        repoUrl = "https://" + ACCESS_TOKEN + "@" + strippedUrl;
+        repoUrl = "https://" + accessToken + "@" + strippedUrl;
         branchName = obj.getString("ref").substring("refs/heads/".length());
         String repositoryName = obj.getJSONObject("repository").getString("name");
 
@@ -50,6 +51,7 @@ public class RepoManager {
         repoDir = new File(parentDir, "testRepo");
         branchName = "test-branch";
         repoUrl = "not-applicable";
+        accessToken = "not-applicable";
 
         if (!repoDir.mkdirs()) {
             throw new IOException("Could not create repo dir in test constructor");

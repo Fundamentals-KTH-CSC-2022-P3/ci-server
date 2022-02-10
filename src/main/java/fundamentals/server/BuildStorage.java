@@ -88,12 +88,12 @@ public class BuildStorage {
      * If you want to update the file on disk then you have to call {@code saveToDisk()} after you have
      * added your build.
      *
-     * @param commitHash the commit hash.
-     * @param repository the repository.
      * @param owner      the owner of the repository.
+     * @param repository the repository.
+     * @param commitHash the commit hash.
      * @return an object of type {@code JSONObject} that contains information about the current build.
      */
-    public synchronized JSONObject addNewBuild(String commitHash, String repository, String owner) {
+    public synchronized JSONObject addNewBuild(String owner, String repository, String commitHash) {
         JSONObject build = new JSONObject();
 
         // Generate a unique identifier for this build.
@@ -101,9 +101,9 @@ public class BuildStorage {
 
         // The information we will store about each build.
         build.put("build_id", buildID);
-        build.put("commit", commitHash);
-        build.put("repository", repository);
         build.put("owner", owner);
+        build.put("repository", repository);
+        build.put("commit", commitHash);
         build.put("build_started", Instant.now().toString());
         build.put("build_ended", "not yet");
         build.put("compile_status", "pending");

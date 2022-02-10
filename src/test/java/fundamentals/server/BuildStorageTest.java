@@ -57,17 +57,35 @@ public class BuildStorageTest {
 
         JSONObject build1 = storage.getBuild("9ff81d98-ee33-444c-991c-8005fd6f7b62");
         assertEquals("example-owner", build1.getString("owner"));
-        assertEquals("example-hash", build1.getString("commit"));
         assertEquals("example-repo", build1.getString("repository"));
+        assertEquals("example-hash", build1.getString("commit"));
 
         JSONObject build2 = storage.getBuild("3663086f-4bea-439f-a8d4-c6721b61a28e");
         assertEquals("example-owner-2", build2.getString("owner"));
-        assertEquals("example-hash-2", build2.getString("commit"));
         assertEquals("example-repo-2", build2.getString("repository"));
+        assertEquals("example-hash-2", build2.getString("commit"));
 
         JSONObject build3 = storage.getBuild("c7c4fec1-a849-4a48-89fd-4d3f343f7e11");
         assertEquals("example-owner-3", build3.getString("owner"));
-        assertEquals("example-hash-3", build3.getString("commit"));
         assertEquals("example-repo-3", build3.getString("repository"));
+        assertEquals("example-hash-3", build3.getString("commit"));
+    }
+
+    /**
+     * Ensure that we can create a new build.
+     */
+    @Test
+    @DisplayName("Create a new build test")
+    void createNewBuildTest() {
+        BuildStorage storage = BuildStorage.loadBuildStorageFile(BUILDS_TEST_FILE);
+        JSONObject newBuild = storage.addNewBuild("new-owner", "new-repo", "new-commit");
+
+        assertEquals("new-owner", newBuild.getString("owner"));
+        assertEquals("new-repo", newBuild.getString("repository"));
+        assertEquals("new-commit", newBuild.getString("commit"));
+
+        // Ensure that it is possible to retrieve the new build from the array.
+        String buildID = newBuild.getString("build_id");
+        assertEquals(newBuild, storage.getBuild(buildID));
     }
 }

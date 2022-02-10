@@ -21,7 +21,7 @@ public class Tester {
     }
 
     public boolean run() {
-        String[] mavenCmd = {"mvn.cmd", "test"};
+        String[] mavenCmd = {"mvn", "test"};
         System.out.println("running maven");
         Process mavenProcess = null;
         try {

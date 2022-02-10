@@ -27,4 +27,8 @@ public class Compiler {
 
         return this.shell.execute(mavenCmd, null, repoDir);
     }
+
+    public List<String> getCompileOutput() {
+        return this.shell.getStdout();
+    }
 }

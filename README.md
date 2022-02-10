@@ -5,12 +5,19 @@ Welcome to our implementation of a minimalistic CI-Server.
 ## Core CI Features
 
 ### Compilation
-#### Implemented
+#### Implementation
 #### Unit-tested
 
 ### Testing
-#### Implemented
+#### Implementation
+
+The CI server runs the tests of the tested repo by running `mvn test` in the root of the tested repo.
+This generates a Surefire test report, which is what the CI server looks through to find any failed tests.
+
 #### Unit-tested
+
+This functionality is unit tested by creating dummy reports in a directory that is empty save for the
+correct Surefire report folder structure, and checking the result of looking through these dummy reports.
 
 ### Notification
 

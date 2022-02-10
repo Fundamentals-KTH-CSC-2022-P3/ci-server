@@ -13,9 +13,6 @@ import java.util.UUID;
  * Represents a persistent storage that will store all builds both in main-memory but also on disk in JSON format.
  * Everytime the server restarts the builds.json file will be loaded into main-memory. Use the {@code saveToDisk}
  * method when a new build is added to ensure that we keep an updated version of the builds on disk.
- * <p>
- * The {@code BuildStorage} class is implemented using the Singleton pattern which means that the "builds.json" file gets loaded after
- * the method {@code getInstance} has been called for the first time.
  */
 public class BuildStorage {
 
@@ -83,7 +80,8 @@ public class BuildStorage {
     }
 
     // We want the programmer to use loadBuildStorageFile() to create an instance of this class and never the constructor.
-    private BuildStorage() {}
+    private BuildStorage() {
+    }
 
     /**
      * Will add a new build to the array stored in main-memory. However, this call will not update the file on disk.

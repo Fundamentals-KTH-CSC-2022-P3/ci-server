@@ -73,18 +73,29 @@ public class WebhookHandler extends AbstractHandler {
             JSONObject newBuild = storage.addNewBuild(owner, repository, commitHash);
 
             RepoManager manager = new RepoManager(body.toString(), env);
+            Compiler compiler = new Compiler(manager.repoDir, new Bash());
             Tester tester = new Tester(manager.repoDir, new Bash());
 
             manager.cloneRepo();
             manager.checkoutBranch();
-            Boolean successful = tester.run();
-            manager.cleanUp();
 
-            if (successful) {
+            Boolean didCompile = compiler.compile();
+
+            if (didCompile) {
+                System.out.println("Did compile without error");
+            } else {
+                System.err.println("compilation failed");
+            }
+
+            Boolean testsPassed = tester.run();
+
+            if (testsPassed) {
                 System.out.println("testsuite executed without any failures");
             } else {
-                System.out.println("testsuite failed");
+                System.err.println("testsuite failed");
             }
+
+            manager.cleanUp();
 
             // TODO:
             // Set the commit status to pending on Github.

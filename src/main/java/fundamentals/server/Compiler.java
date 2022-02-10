@@ -1,41 +1,30 @@
 package fundamentals.server;
 
+import fundamentals.server.helpers.Bash;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Compiler {
+
     private final File repoDir;
-    private final String[] compileCmd = new String[]{"mvn", "compile"};
+    private Bash shell;
     private List<String> compileOutput;
 
-    public Compiler(File repoDir) {
+    public Compiler(File repoDir, Bash shell) {
         this.repoDir = repoDir;
+        this.shell = shell;
     }
 
     /**
      * Compiles the repository using maven, and returns true if the exit code from "mvn compile" is 0.
      * @return true if the compilation was successful, as determined by the exit code of "mvn compile"
-     * @throws IOException if the specified working directory is unreachable
-     * @throws InterruptedException if the compilation process could not complete its execution.
      */
-    public boolean compile() throws IOException, InterruptedException {
-        Process compileProcess = Runtime.getRuntime().exec(compileCmd, null, repoDir);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(compileProcess.getInputStream()));
-        compileProcess.waitFor();
-        compileOutput = reader.lines().toList();
+    public boolean compile() {
+        String[] mavenCmd = {"mvn", "compile"};
 
-        int exitValue = compileProcess.exitValue();
-        if (exitValue == 0) {
-            System.out.println("Compilation successful.");
-        } else {
-            System.out.println("Compilation failed.");
-        }
-        return exitValue == 0;
-    }
-
-    public List<String> getCompileOutput() {
-        return compileOutput;
+        return this.shell.execute(mavenCmd, null, repoDir);
     }
 }

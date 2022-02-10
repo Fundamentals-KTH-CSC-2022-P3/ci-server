@@ -12,7 +12,7 @@ public class Bash {
     private List<String> stdout;
 
     public boolean execute(String[] cmdArray, String[] envArr, File dir) {
-        Process process = null;
+        Process process;
         BufferedReader reader = null;
 
         try {

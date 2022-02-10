@@ -85,8 +85,10 @@ public class WebhookHandler extends AbstractHandler {
 
             String username = environment.getValue("USERNAME");
             String personalAccessToken = environment.getValue("PERSONAL_ACCESS_TOKEN");
+            String hostname = environment.getValue("HOSTNAME");
+
             GithubCommitAPI api = new GithubCommitAPI(owner, repository, commitHash, username, personalAccessToken);
-            GithubCommitAPIRequest apiRequest = api.setCommitStatusPending("Compiling and running tests...", "http://localhost/build/" + buildID);
+            GithubCommitAPIRequest apiRequest = api.setCommitStatusPending("Compiling and running tests...", "http://" + hostname + "/build/" + buildID);
 
             if (apiRequest.send()) {
                 System.out.println("Updated commit status to pending for commit: " + commitHash);
@@ -113,17 +115,25 @@ public class WebhookHandler extends AbstractHandler {
 
             if (testsPassed) {
                 System.out.println("testsuite executed without any failures");
+
+                apiRequest = api.setCommitStatusSuccess("tests passed", "http://" + hostname + "/build/" + buildID);
+                if (apiRequest.send()) {
+                    System.out.println("Updated commit status to pending for commit: " + commitHash);
+                } else {
+                    System.out.println("Failed to update commit status for: " + commitHash);
+                }
             } else {
-                System.err.println("testsuite failed");
+                System.out.println("testsuite failed");
+
+                apiRequest = api.setCommitStatusError("tests failed", "http://" + hostname + "/build/" + buildID);
+                if (apiRequest.send()) {
+                    System.out.println("Updated commit status to pending for commit: " + commitHash);
+                } else {
+                    System.out.println("Failed to update commit status for: " + commitHash);
+                }
             }
 
             manager.cleanUp();
-
-            // TODO:
-            // On a background thread compile and test the repo.
-            // When the background thread is done, update build logs, build status, etc in the JSONObject (main-memory).
-            // Update the commit status on Github.
-            // Write the JSONObject to disk using the saveToDisk() method in the Storage class.
         }
     }
 }

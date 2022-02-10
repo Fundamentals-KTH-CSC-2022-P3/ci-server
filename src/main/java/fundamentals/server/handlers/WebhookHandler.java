@@ -118,7 +118,7 @@ public class WebhookHandler extends AbstractHandler {
 
                 apiRequest = api.setCommitStatusSuccess("tests passed", "http://" + hostname + "/build/" + buildID);
                 if (apiRequest.send()) {
-                    System.out.println("Updated commit status to pending for commit: " + commitHash);
+                    System.out.println("Updated commit status to success for commit: " + commitHash);
                 } else {
                     System.out.println("Failed to update commit status for: " + commitHash);
                 }
@@ -127,7 +127,7 @@ public class WebhookHandler extends AbstractHandler {
 
                 apiRequest = api.setCommitStatusError("tests failed", "http://" + hostname + "/build/" + buildID);
                 if (apiRequest.send()) {
-                    System.out.println("Updated commit status to pending for commit: " + commitHash);
+                    System.out.println("Updated commit status to failed for commit: " + commitHash);
                 } else {
                     System.out.println("Failed to update commit status for: " + commitHash);
                 }

@@ -13,6 +13,12 @@ import java.io.InputStreamReader;
 
 public class WebhookHandler extends AbstractHandler {
 
+    private final BuildStorage storage;
+
+    public WebhookHandler(BuildStorage storage) {
+        this.storage = storage;
+    }
+
     @Override
     public void handle(String target,
                        Request baseRequest,
@@ -50,21 +56,24 @@ public class WebhookHandler extends AbstractHandler {
 
             JSONObject root = new JSONObject(body.toString());
 
-            String commitSha = root.getString("after");
-            String repository = root.getJSONObject("repository").getString("name");
             String owner = root.getJSONObject("repository").getJSONObject("owner").getString("name");
+            String repository = root.getJSONObject("repository").getString("name");
+            String commitHash = root.getString("after");
 
             System.out.println("Push event: ");
-            System.out.println("Commit:" + commitSha);
-            System.out.println("Repository:" + repository);
             System.out.println("Owner:" + owner);
+            System.out.println("Repository:" + repository);
+            System.out.println("Commit:" + commitHash);
+
+            // Create a build ID, build date and set build status = pending. Store this in a JSONObject in main-memory.
+            JSONObject newBuild = storage.addNewBuild(owner, repository, commitHash);
 
             // TODO:
-            // Create a build ID, build date and set build status = pending. Store this in a JSON file and keep it in main-memory.
             // Set the commit status to pending on Github.
             // On a background thread compile and test the repo.
-            // When the background thread is done, update build logs, build status, etc in the JSON file and main memory.
+            // When the background thread is done, update build logs, build status, etc in the JSONObject (main-memory).
             // Update the commit status on Github.
+            // Write the JSONObject to disk using the saveToDisk() method in the Storage class.
         }
     }
 }

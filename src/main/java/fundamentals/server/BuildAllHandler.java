@@ -11,6 +11,12 @@ import java.io.IOException;
 
 public class BuildAllHandler extends AbstractHandler {
 
+    private final BuildStorage storage;
+
+    public BuildAllHandler(BuildStorage storage) {
+        this.storage = storage;
+    }
+
     @Override
     public void handle(String target,
                        Request baseRequest,
@@ -22,7 +28,6 @@ public class BuildAllHandler extends AbstractHandler {
         baseRequest.setHandled(true);
 
         // Respond with the JSON array of all builds.
-        BuildStorage storage = BuildStorage.getInstance();
         JSONArray builds = storage.getAllBuilds();
         response.getWriter().println(builds.toString());
     }

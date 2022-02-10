@@ -11,6 +11,12 @@ import java.io.IOException;
 
 public class BuildHandler extends AbstractHandler {
 
+    private final BuildStorage storage;
+
+    public BuildHandler(BuildStorage storage) {
+        this.storage = storage;
+    }
+
     @Override
     public void handle(String target,
                        Request baseRequest,
@@ -28,7 +34,6 @@ public class BuildHandler extends AbstractHandler {
             System.out.println("Build ID: " + buildID);
 
             // Find the JSON object that has information about the requested build ID and return that.
-            BuildStorage storage = BuildStorage.getInstance();
             JSONObject build = storage.getBuild(buildID);
             if (build == null) {
                 response.setContentType("text/html;charset=utf-8");

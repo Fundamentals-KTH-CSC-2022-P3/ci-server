@@ -21,8 +21,6 @@ public class BuildStorage {
 
     public static final String DEFAULT_BUILD_STORAGE_FILE = "builds.json";
 
-    private static BuildStorage instance;
-
     // The build ID is a universally unique identifier (UUID).
     // If we don't want to do a linear search when the user asks for information about a build with a certain build ID,
     // then we should keep a lookup table that maps each build ID to an array index.
@@ -35,38 +33,15 @@ public class BuildStorage {
     private String filePath;
 
     /**
-     * Returns an instance of this class. Only one instance of this class will ever be created during program execution.
-     * This method should only be called from unit-tests. If you are not working on unit tests then call the {@code getInstance()}
-     * method instead that will use the default "builds.json" file.
-     *
-     * @return an instance of type {@code BuildStorage}
-     */
-    public static BuildStorage getInstance(String filePath) {
-        if (instance == null) {
-            loadBuildStorageFile(filePath);
-        }
-
-        return instance;
-    }
-
-    /**
-     * Returns an instance of this class. Only one instance of this class will ever be created during program execution.
-     * The instance will store all the builds from the "builds.json" file.
-     *
-     * @return an instance of type {@code BuildStorage}
-     */
-    public static BuildStorage getInstance() {
-        return getInstance(DEFAULT_BUILD_STORAGE_FILE);
-    }
-
-    /**
      * Creates an instance of the {@code BuildStorage} class and loads the builds file from disk into main-memory.
+     * This method should only be called from unit-tests. If you are not working on unit tests then call the {@code loadBuildStorageFile()}
+     * method instead that will use the default "builds.json" file.
      *
      * @param filePath the path to the builds file.
      */
-    private static void loadBuildStorageFile(String filePath) {
-        instance = new BuildStorage();
-        instance.filePath = filePath;
+    public static BuildStorage loadBuildStorageFile(String filePath) {
+        BuildStorage storage = new BuildStorage();
+        storage.filePath = filePath;
 
         // Read the builds from disk into main-memory.
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath, StandardCharsets.UTF_8))) {
@@ -77,28 +52,37 @@ public class BuildStorage {
             }
 
             // Parse the JSON text to an actual JSONArray object.
-            instance.builds = new JSONArray(jsonText.toString());
+            storage.builds = new JSONArray(jsonText.toString());
 
             // Create mappings from build ID to array index (this is only done for performance).
-            for (int i = 0; i < instance.builds.length(); i++) {
-                JSONObject build = instance.builds.getJSONObject(i);
+            for (int i = 0; i < storage.builds.length(); i++) {
+                JSONObject build = storage.builds.getJSONObject(i);
                 String buildID = build.getString("build_id");
-                instance.buildIDToArrayIndex.put(buildID, i);
+                storage.buildIDToArrayIndex.put(buildID, i);
             }
         } catch (FileNotFoundException e) {
             // Builds file does not exist. Create a builds file with an empty array inside.
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, StandardCharsets.UTF_8))) {
                 writer.write("[]");
-                instance.builds = new JSONArray();
+                storage.builds = new JSONArray();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return storage;
     }
 
-    // This class should not be instantiated from another class.
+    /**
+     * Creates an instance of the {@code BuildStorage} class and loads the builds file from disk into main-memory.
+     */
+    public static BuildStorage loadBuildStorageFile() {
+        return loadBuildStorageFile(DEFAULT_BUILD_STORAGE_FILE);
+    }
+
+    // We want the programmer to use loadBuildStorageFile() to create an instance of this class and never the constructor.
     private BuildStorage() {}
 
     /**
@@ -173,7 +157,7 @@ public class BuildStorage {
     /**
      * Will write all builds that are stored in main-memory to a file on disk.
      */
-    public void saveToDisk() {
+    public synchronized void saveToDisk() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, StandardCharsets.UTF_8))) {
             writer.write(builds.toString());
         } catch (IOException ex) {

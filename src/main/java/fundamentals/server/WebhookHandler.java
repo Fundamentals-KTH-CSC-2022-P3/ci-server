@@ -13,6 +13,12 @@ import java.io.InputStreamReader;
 
 public class WebhookHandler extends AbstractHandler {
 
+    private final BuildStorage storage;
+
+    public WebhookHandler(BuildStorage storage) {
+        this.storage = storage;
+    }
+
     @Override
     public void handle(String target,
                        Request baseRequest,
@@ -60,7 +66,6 @@ public class WebhookHandler extends AbstractHandler {
             System.out.println("Owner:" + owner);
 
             // Create a build ID, build date and set build status = pending. Store this in a JSONObject in main-memory.
-            BuildStorage storage = BuildStorage.getInstance();
             JSONObject newBuild = storage.addNewBuild(commitHash, repository, owner);
 
             // TODO:

@@ -19,7 +19,7 @@ public class BuildStorageTest {
     @Test
     @DisplayName("Retrieve existing builds test")
     void retrieveBuildsTest() {
-        BuildStorage storage = BuildStorage.getInstance(BUILDS_TEST_FILE);
+        BuildStorage storage = BuildStorage.loadBuildStorageFile(BUILDS_TEST_FILE);
         assertNotNull(storage.getBuild("9ff81d98-ee33-444c-991c-8005fd6f7b62"));
         assertNotNull(storage.getBuild("3663086f-4bea-439f-a8d4-c6721b61a28e"));
         assertNotNull(storage.getBuild("c7c4fec1-a849-4a48-89fd-4d3f343f7e11"));
@@ -31,7 +31,7 @@ public class BuildStorageTest {
     @Test
     @DisplayName("Cannot retrieve non-existing builds test")
     void cannotRetrieveNonExistingBuildsTest() {
-        BuildStorage storage = BuildStorage.getInstance(BUILDS_TEST_FILE);
+        BuildStorage storage = BuildStorage.loadBuildStorageFile(BUILDS_TEST_FILE);
         assertNull(storage.getBuild("fff81d98-ee33-444c-991c-8005fd6f7b62"));
         assertNull(storage.getBuild("3663086f-424a-439f-a8d4-c6721b61a28e"));
         assertNull(storage.getBuild("c7c4fec1-a849-4a48-89fd-4d3f343f7e91"));
@@ -43,7 +43,7 @@ public class BuildStorageTest {
     @Test
     @DisplayName("The correct number of builds are stored test")
     void correctNumberOfBuildsTest() {
-        BuildStorage storage = BuildStorage.getInstance(BUILDS_TEST_FILE);
+        BuildStorage storage = BuildStorage.loadBuildStorageFile(BUILDS_TEST_FILE);
         assertEquals(3, storage.size());
     }
 
@@ -53,7 +53,7 @@ public class BuildStorageTest {
     @Test
     @DisplayName("Can retrieve the correct build information test")
     void retrieveKeyValuePairsFromEnvironmentTest() {
-        BuildStorage storage = BuildStorage.getInstance(BUILDS_TEST_FILE);
+        BuildStorage storage = BuildStorage.loadBuildStorageFile(BUILDS_TEST_FILE);
 
         JSONObject build1 = storage.getBuild("9ff81d98-ee33-444c-991c-8005fd6f7b62");
         assertEquals("example-owner", build1.getString("owner"));

@@ -43,6 +43,35 @@ public class RepoManager {
     }
 
     /**
+     * Constructor for creating an empty git repo to be used for testing ONLY!
+     */
+    RepoManager() throws IOException, InterruptedException {
+        parentDir = new File(workDir, Long.toString(System.nanoTime()));
+        repoDir = new File(parentDir, "testRepo");
+        branchName = "test-branch";
+        repoUrl = "not-applicable";
+
+        if (!repoDir.mkdirs()) {
+            throw new IOException("Could not create repo dir in test constructor");
+        }
+
+        String[] gitInitCmd = new String[]{"git", "init"};
+        runtime.exec(gitInitCmd, null, repoDir).waitFor();
+
+        // We want to check for the branch names, but git does not output them when the repo is completely empty,
+        // so we need to add a dummy file first
+        String dummyFileName = "dummy";
+        File dummyFile = new File(repoDir, dummyFileName);
+        if (!dummyFile.createNewFile()) {
+            throw new IOException();
+        }
+        String[] gitAddCmd = new String[]{"git", "add", dummyFileName};
+        runtime.exec(gitAddCmd, null, repoDir).waitFor();
+        String[] gitCommitCmd = new String[]{"git", "commit", "-m", "\"dummy\""};
+        runtime.exec(gitCommitCmd, null, repoDir).waitFor();
+    }
+
+    /**
      * Clones the repository specified by the repoUrl and checks out the correct branch.
      */
     public void cloneRepo() {

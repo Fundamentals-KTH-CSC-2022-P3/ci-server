@@ -13,13 +13,12 @@ import java.io.InputStreamReader;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RepoManagerTest {
-    private static final String validPayload = "{\"ref\": \"refs/heads/main\",\"repository\": {\"name\": \"ci-server\",\"clone_url\": \"https://github.com/Fundamentals-KTH-CSC-2022-P3/ci-server.git\",}}\n";
     private static final String invalidPayload = "{}";
     private static RepoManager repoManager;
 
     @BeforeAll
-    static void setup() throws IOException {
-        repoManager = new RepoManager(validPayload);
+    static void setup() throws IOException, InterruptedException {
+        repoManager = new RepoManager();
     }
 
     @AfterAll
@@ -39,14 +38,12 @@ public class RepoManagerTest {
 
     @Test
     void cloneRepoCreatesLocalCopy() {
-        repoManager.cloneRepo();
         File gitFolder = new File(repoManager.repoDir, ".git");
         assertTrue(gitFolder.exists());
     }
 
     @Test
     void checkoutChangesBranch() throws InterruptedException, IOException {
-        repoManager.cloneRepo();
         String newBranchName = "name-of-branch-to-be-created-that-does-not-already-exist";
         String[] checkExistingBranchesCmd = new String[]{"git", "branch"};
         Process branchProcess = Runtime.getRuntime().exec(checkExistingBranchesCmd, null, repoManager.workDir);

@@ -50,7 +50,7 @@
         }
 
         .inner-header {
-            max-width: 1280px;
+            max-width: 1600px;
             margin: auto;
         }
 
@@ -60,7 +60,7 @@
         }
 
         .inner-content {
-            max-width: 1280px;
+            max-width: 1600px;
             margin: auto;
         }
 
@@ -140,8 +140,8 @@
                             <p class="build-info-value owner">Fundamentals-KTH-CSC-2022-P3</p>
                         </div>
                         <div class="build-info-cell">
-                            <p class="build-info-label">Build started</p>
-                            <p class="build-info-value build-started">2022-02-09T14:39:06.099022900Z</p>
+                            <p class="build-info-label">Build status</p>
+                            <p class="build-info-value build-status">Pending</p>
                         </div>
                     </div>
                     <div class="build-info-col">
@@ -150,17 +150,23 @@
                             <p class="build-info-value repository">set-commit-status-test</p>
                         </div>
                         <div class="build-info-cell">
+                            <p class="build-info-label">Build started</p>
+                            <p class="build-info-value build-started">2022-02-09T14:39:06.099022900Z</p>
+                        </div>
+                    </div>
+                    <div class="build-info-col">
+                        <div class="build-info-cell">
+                            <p class="build-info-label">Commit</p>
+                            <p class="build-info-value commit">57078cb22a033227928f33cfff0328ee80fa3b35</p>
+                        </div>
+                        <div class="build-info-cell">
                             <p class="build-info-label">Build ended</p>
                             <p class="build-info-value build-ended">Not yet</p>
                         </div>
                     </div>
                     <div class="build-info-col">
-                        <p class="build-info-label">Commit</p>
-                        <p class="build-info-value commit">57078cb22a033227928f33cfff0328ee80fa3b35</p>
-                    </div>
-                    <div class="build-info-col">
-                        <p class="build-info-label">Build status</p>
-                        <p class="build-info-value build-status">Pending</p>
+                        <p class="build-info-label">Branch</p>
+                        <p class="build-info-value branch">main</p>
                     </div>
                 </div>
 
@@ -221,7 +227,8 @@
                 document.querySelector('.commit').innerHTML = buildInfo['commit'];
                 document.querySelector('.build-started').innerHTML = buildInfo['build_started'];
                 document.querySelector('.build-ended').innerHTML = buildInfo['build_ended'];
-                
+                document.querySelector('.branch').innerHTML = buildInfo['branch'];
+
                 if (buildInfo['compile_status'] == 'pending' || buildInfo['test_status'] == 'pending') {
                     document.querySelector('.build-status').innerHTML = 'Pending';
                 } else if (buildInfo['compile_status'] == 'success' && buildInfo['test_status'] == 'success') {

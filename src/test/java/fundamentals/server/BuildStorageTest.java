@@ -98,10 +98,11 @@ public class BuildStorageTest {
     @DisplayName("Create a new build test")
     void createNewBuildTest() {
         BuildStorage storage = BuildStorage.loadBuildStorageFile(BUILDS_TEST_FILE);
-        JSONObject newBuild = storage.addNewBuild("new-owner", "new-repo", "new-commit");
+        JSONObject newBuild = storage.addNewBuild("new-owner", "new-repo", "new-branch", "new-commit");
 
         assertEquals("new-owner", newBuild.getString("owner"));
         assertEquals("new-repo", newBuild.getString("repository"));
+        assertEquals("new-branch", newBuild.getString("branch"));
         assertEquals("new-commit", newBuild.getString("commit"));
 
         // Ensure that it is possible to retrieve the new build from the array.

@@ -13,7 +13,7 @@ public class RepoManager {
     private final String repoUrl;
 
     public RepoManager(String repoUrl, String repoName, String branchName, File workDir, String accessToken) throws IOException {
-        this.branchName = branchName.substring("refs/heads/".length());
+        this.branchName = branchName;
         this.repoUrl = "https://" + accessToken + "@" + repoUrl.substring("https://".length());
 
         parentDir = new File(workDir, Long.toString(System.nanoTime()));
@@ -56,6 +56,10 @@ public class RepoManager {
             System.err.println("Error running git checkout in " + repoDir.getAbsolutePath());
             ioException.printStackTrace();
         }
+    }
+
+    public File getRepoDir() {
+        return repoDir;
     }
 
     /**

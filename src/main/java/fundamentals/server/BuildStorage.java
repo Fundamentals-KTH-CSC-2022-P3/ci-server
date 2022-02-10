@@ -91,10 +91,11 @@ public class BuildStorage {
      *
      * @param owner      the owner of the repository.
      * @param repository the repository.
+     * @param branch     the branch.
      * @param commitHash the commit hash.
      * @return an object of type {@code JSONObject} that contains information about the current build.
      */
-    public synchronized JSONObject addNewBuild(String owner, String repository, String commitHash) {
+    public synchronized JSONObject addNewBuild(String owner, String repository, String branch, String commitHash) {
         JSONObject build = new JSONObject();
 
         // Generate a unique identifier for this build.
@@ -104,6 +105,7 @@ public class BuildStorage {
         build.put("build_id", buildID);
         build.put("owner", owner);
         build.put("repository", repository);
+        build.put("branch", branch);
         build.put("commit", commitHash);
         build.put("build_started", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         build.put("build_ended", "not yet");

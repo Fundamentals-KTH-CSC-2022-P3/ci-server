@@ -62,19 +62,6 @@ public class GithubCommitAPI {
     }
 
     /**
-     * Creates a new {@code GithubCommitAPI} object against a specific owner, repository and commit.
-     * To gain access to this repository we will the username and personal access token stored in the .env file.
-     *
-     * @param owner      the owner of the repository that we want to work with.
-     * @param repository the repository we want to work with.
-     * @param commitHash the commit we want to work with, specify the SHA hash.
-     */
-    public GithubCommitAPI(String owner, String repository, String commitHash) {
-        this(owner, repository, commitHash,
-                Environment.getInstance().getValue("USERNAME"), Environment.getInstance().getValue("PERSONAL_ACCESS_TOKEN"));
-    }
-
-    /**
      * Generates a request to set the commit status of a specific commit to error.
      *
      * @param description a description for the commit status. For example "all tests passed".

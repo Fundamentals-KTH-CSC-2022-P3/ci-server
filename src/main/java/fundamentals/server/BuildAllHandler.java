@@ -5,10 +5,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.json.JSONArray;
 
 import java.io.IOException;
 
 public class BuildAllHandler extends AbstractHandler {
+
+    private final BuildStorage storage;
+
+    public BuildAllHandler(BuildStorage storage) {
+        this.storage = storage;
+    }
 
     @Override
     public void handle(String target,
@@ -20,7 +27,8 @@ public class BuildAllHandler extends AbstractHandler {
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
 
-        // TODO:
         // Respond with the JSON array of all builds.
+        JSONArray builds = storage.getAllBuilds();
+        response.getWriter().println(builds.toString());
     }
 }

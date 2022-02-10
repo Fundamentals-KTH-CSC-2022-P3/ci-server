@@ -16,7 +16,7 @@ public class EnvironmentTest {
     @Test
     @DisplayName("All keys can be found test")
     void containsAllKeysTest() {
-        Environment env = Environment.getInstance(ENVIRONMENT_TEST_FILE);
+        Environment env = Environment.loadEnvironmentFile(ENVIRONMENT_TEST_FILE);
         assertTrue(env.containsKey("NAME"));
         assertTrue(env.containsKey("SENTENCE"));
         assertTrue(env.containsKey("A COOL KEY"));
@@ -30,7 +30,7 @@ public class EnvironmentTest {
     @Test
     @DisplayName("The correct number of key-value pairs are stored test")
     void correctNumberOfKeyValuePairsTest() {
-        Environment env = Environment.getInstance(ENVIRONMENT_TEST_FILE);
+        Environment env = Environment.loadEnvironmentFile(ENVIRONMENT_TEST_FILE);
         assertEquals(6, env.size());
     }
 
@@ -40,7 +40,7 @@ public class EnvironmentTest {
     @Test
     @DisplayName("Can retrieve the correct value for each key test")
     void retrieveKeyValuePairsFromEnvironmentTest() {
-        Environment env = Environment.getInstance(ENVIRONMENT_TEST_FILE);
+        Environment env = Environment.loadEnvironmentFile(ENVIRONMENT_TEST_FILE);
         assertEquals("example-name", env.getValue("NAME"));
         assertEquals("this is a sentence", env.getValue("SENTENCE"));
         assertEquals("example-password", env.getValue("PASSWORD"));

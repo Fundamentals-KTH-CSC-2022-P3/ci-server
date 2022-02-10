@@ -18,42 +18,16 @@ public class Environment {
 
     public static final String DEFAULT_ENVIRONMENT_FILE = ".env";
 
-    private static Environment instance = null;
-
-    private HashMap<String, String> keyValuePairs = new HashMap<>();
-
-    /**
-     * Returns an instance of this class. Only one instance of this class will ever be created during program execution.
-     * This method should only be called from unit-tests. If you are not working on unit tests then call the {@code getInstance()}
-     * method instead that will use the default ".env" file.
-     *
-     * @return an instance of type {@code Environment}
-     */
-    public static Environment getInstance(String filePath) {
-        if (instance == null) {
-            loadEnvironmentFile(filePath);
-        }
-
-        return instance;
-    }
-
-    /**
-     * Returns an instance of this class. Only one instance of this class will ever be created during program execution.
-     * The instance will store all the key-value pairs from the ".env" file.
-     *
-     * @return an instance of type {@code Environment}
-     */
-    public static Environment getInstance() {
-        return getInstance(DEFAULT_ENVIRONMENT_FILE);
-    }
+    private final HashMap<String, String> keyValuePairs = new HashMap<>();
 
     /**
      * Creates an instance of the {@code Environment} class and loads the environment file from disk into main-memory.
+     * The instance will store all the key-value pairs from the environment file.
      *
      * @param filePath the path to the environment file.
      */
-    private static void loadEnvironmentFile(String filePath) {
-        instance = new Environment();
+    public static Environment loadEnvironmentFile(String filePath) {
+        Environment environment = new Environment();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -74,7 +48,7 @@ public class Environment {
                 String key = tokens[0].strip();
                 String value = tokens[1].strip();
 
-                instance.keyValuePairs.put(key, value);
+                environment.keyValuePairs.put(key, value);
             }
 
         } catch (FileNotFoundException e) {
@@ -82,9 +56,19 @@ public class Environment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return environment;
     }
 
-    // This class should not be instantiated from another class.
+    /**
+     * Creates an instance of the {@code Environment} class and loads the environment file ".env" from disk into main-memory.
+     * The instance will store all the key-value pairs from the environment file.
+     */
+    public static Environment loadEnvironmentFile() {
+        return loadEnvironmentFile(DEFAULT_ENVIRONMENT_FILE);
+    }
+
+    // We want the programmer to use loadEnvironmentFile() to create an instance of this class and never the constructor.
     private Environment() {}
 
     /**

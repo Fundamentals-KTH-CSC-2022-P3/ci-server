@@ -1,6 +1,17 @@
-package fundamentals.server;
+package fundamentals.server.handlers;
 
+
+import fundamentals.server.Environment;
+import fundamentals.server.Tester;
+import fundamentals.server.gitTooling.GithubCommitAPI;
+import fundamentals.server.gitTooling.GithubCommitAPIRequest;
+import fundamentals.server.gitTooling.RepoManager;
 import fundamentals.server.helpers.Bash;
+import fundamentals.server.helpers.Compiler;
+
+
+import fundamentals.server.BuildStorage;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -84,8 +95,8 @@ public class WebhookHandler extends AbstractHandler {
             }
 
             RepoManager manager = new RepoManager(body.toString(), environment);
-            Compiler compiler = new Compiler(manager.repoDir, new Bash());
-            Tester tester = new Tester(manager.repoDir, new Bash());
+            Compiler compiler = new Compiler(manager.getRepoDir(), new Bash());
+            Tester tester = new Tester(manager.getRepoDir(), new Bash());
 
             manager.cloneRepo();
             manager.checkoutBranch();

@@ -1,6 +1,7 @@
 package fundamentals.server;
 
 import fundamentals.server.helpers.Bash;
+import fundamentals.server.helpers.Compiler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

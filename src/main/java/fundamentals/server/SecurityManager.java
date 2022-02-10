@@ -8,8 +8,8 @@ import org.eclipse.jetty.util.security.Credential;
 
 public class SecurityManager {
 
-    public static final String ADMIN_DEFAULT_VALUE = "admin";
-    public static final String ADMIN_PASSWORD_DEFAULT = "adminpass";
+    private static final String ADMIN_DEFAULT_VALUE = "admin";
+    private static final String ADMIN_PASSWORD_DEFAULT = "adminpass";
     private final static SecurityManager instance = new SecurityManager();
     private final static String usernameEnvVariableName = "CI_SERVER_USER";
     private final static String passwordEnvVariableName = "CI_SERVER_PASS";
@@ -32,11 +32,11 @@ public class SecurityManager {
         this.password = Credential.getCredential(password);
     }
 
-    public Credential getAdminCredential() {
+    private Credential getAdminCredential() {
         return password;
     }
 
-    public String getAdminUsername(){
+    private String getAdminUsername(){
         return username;
     }
 
@@ -49,8 +49,8 @@ public class SecurityManager {
             return adminLoginService;
         adminLoginService = new HashLoginService();
         var store = new UserStore();
-        var credential = SecurityManager.getInstance().getAdminCredential();
-        var admin = SecurityManager.getInstance().getAdminUsername();
+        var credential = getAdminCredential();
+        var admin = getAdminUsername();
         store.addUser(admin, credential, ROLES);
         adminLoginService.setUserStore(store);
         return adminLoginService;

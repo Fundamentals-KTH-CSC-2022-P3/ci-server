@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CI Server</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p {
+            font-family: 'Roboto', sans-serif;
+            color: rgb(49, 49, 49);
+        }
+
+        a {
+            font-family: 'Roboto', sans-serif;
+            color:#0066ff;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 300;
+        }
+
+        p {
+            font-weight: 500;
+        }
+
+        .container {
+            width: 100%;
+            height: auto;
+        }
+
+        .header {
+            padding: 24px 8px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .build-part {
+            font-size: 70%;
+        }
+
+        .inner-header {
+            max-width: 1280px;
+            margin: auto;
+        }
+
+        .content {
+            margin-top: 24px;
+            padding: 8px;
+        }
+
+        .inner-content {
+            max-width: 1280px;
+            margin: auto;
+        }
+
+        .build-list {
+            list-style: none;
+        }
+
+        .build-item {
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid #ccc;
+            margin-bottom: 16px;
+            padding: 16px;
+        }
+
+        .build-info-label {
+            font-size: 0.9rem;
+            padding-bottom: 2px;
+        }
+
+        .build-info-value {
+            font-size: 1rem;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="inner-header">
+                <h1>CI Server / <span class="build-part">build / all</span></h1>
+            </div>
+        </header>
+        <div class="content">
+            <div class="inner-content">
+                <ul class="build-list">
+                   
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        async function fetchData() {
+            response = await fetch('http://ci.alevarn.com/build/all');
+            
+            buildsInfo = await response.json();
+        
+            const buildListElement = document.querySelector('.build-list');
+
+            buildsInfo.forEach(buildInfo => {
+                const buildID = buildInfo['build_id'];
+                const owner = buildInfo['owner'];
+                const repository = buildInfo['repository'];
+                const buildStarted = buildInfo['build_started'];
+                
+                buildListElement.innerHTML += 
+                `<li class="build-item">
+                    <div class="build-info-col">
+                            <p class="build-info-label">Build ID</p>
+                            <p class="build-info-value"><a href="http://ci.alevarn.com/ui/build/${buildID}">${buildID}</a></p>
+                        </div>
+                        <div class="build-info-col">
+                            <p class="build-info-label">Owner</p>
+                            <p class="build-info-value">${owner}</p>
+                        </div>
+                        <div class="build-info-col">
+                            <p class="build-info-label">Repository</p>
+                            <p class="build-info-value">${repository}</p>
+                        </div>
+                        <div class="build-info-col">
+                            <p class="build-info-label">Build started</p>
+                            <p class="build-info-value">${buildStarted}</p>
+                        </div>
+                </li>`
+            });
+        }
+
+        fetchData();
+
+    </script>
+</body>
+
+</html>

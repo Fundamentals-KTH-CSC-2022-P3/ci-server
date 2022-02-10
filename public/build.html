@@ -206,9 +206,7 @@
             const pathParts = window.location.pathname.split('/');
             const buildID = pathParts[pathParts.length - 1];
             document.querySelector('.build-id').innerHTML = buildID;
-
-            console.log();
-
+            
             response = await fetch('http://ci.alevarn.com/build/' + buildID);
             
             console.log(response);
@@ -225,14 +223,14 @@
                 document.querySelector('.build-ended').innerHTML = buildInfo['build_ended'];
                 
                 if (buildInfo['compile_status'] == 'pending' || buildInfo['test_status'] == 'pending') {
-                    document.querySelector('.build-status').innerHTML = 'pending';
+                    document.querySelector('.build-status').innerHTML = 'Pending';
                 } else if (buildInfo['compile_status'] == 'success' && buildInfo['test_status'] == 'success') {
-                    document.querySelector('.build-status').innerHTML = 'success';
+                    document.querySelector('.build-status').innerHTML = 'Success';
                 } else if (buildInfo['compile_status'] == 'error') {
-                    document.querySelector('.build-status').innerHTML = 'error';
+                    document.querySelector('.build-status').innerHTML = 'Error';
                 } else {
                     // Tests must have failed.
-                    document.querySelector('.build-status').innerHTML = 'failure';
+                    document.querySelector('.build-status').innerHTML = 'Failure';
                 }
 
                 setBuildStatusColor();

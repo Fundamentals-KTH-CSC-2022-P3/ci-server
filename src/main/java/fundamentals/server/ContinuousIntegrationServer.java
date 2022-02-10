@@ -35,6 +35,7 @@ public class ContinuousIntegrationServer {
         endpoints.addHandler(getContextHandler("/webhook", new WebhookHandler(storage)));
         endpoints.addHandler(getContextHandler("/build/all", new BuildAllHandler(storage)));
         endpoints.addHandler(getContextHandler("/build", new BuildHandler(storage)));
+        endpoints.addHandler(getContextHandler("/ui/build/all", new UIBuildAllHandler()));
         endpoints.addHandler(getContextHandler("/ui/build", new UIBuildHandler()));
         return endpoints;
     }

@@ -24,6 +24,10 @@ public class Tester {
         this.shell = shell;
     }
 
+    /**
+     * Runs the tests via maven in the repo
+     * @return true if the tests succeeded, false otherwise
+     */
     public boolean run() {
         String[] mavenCmd = {"mvn", "test"};
         System.out.println("running maven");

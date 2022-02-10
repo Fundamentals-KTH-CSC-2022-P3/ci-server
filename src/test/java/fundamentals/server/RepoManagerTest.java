@@ -3,6 +3,7 @@ package fundamentals.server;
 import org.json.JSONException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -46,6 +47,7 @@ public class RepoManagerTest {
     }
 
     @Test
+    @Disabled
     void checkoutChangesBranch() throws InterruptedException, IOException {
         String newBranchName = "name-of-branch-to-be-created-that-does-not-already-exist";
         String[] checkExistingBranchesCmd = new String[]{"git", "branch"};

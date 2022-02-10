@@ -32,7 +32,7 @@ public class RepoManagerTest {
 
     @Test
     void repoManagerWithInvalidPayloadThrowsException() {
-        assertThrows(JSONException.class, () -> new RepoManager(invalidPayload, new Environment()));
+        assertThrows(JSONException.class, () -> new RepoManager(invalidPayload, Environment.getInstance()));
     }
 
     @Test

@@ -5,14 +5,29 @@ Welcome to our implementation of a minimalistic CI-Server.
 ## Core CI Features
 
 ### Compilation
+
 #### Implementation
+
+The CI server clones the repository specified in the payload provided by the GitHub webhook,
+checks out the correct branch and then runs `mvn compile` in the root of the
+repository. If the return code of `mvn compile` is 0, the build is considered
+successful, otherwise it is considered a failure.
+
 #### Unit-tested
 
+The compilation is unit tested by cloning a repository that is guaranteed (by
+GitHub actions) to be in a compilable state, and then trying to compile that repo
+and verifying that it passes. Another unit test is constituted by disturbing the
+source code of that repository to an uncompilable state and verifying that compilation
+fails. **This should change to mocking the necessary behaviour.**
+
 ### Testing
+
 #### Implementation
 
 The CI server runs the tests of the tested repo by running `mvn test` in the root of the tested repo.
 This generates a Surefire test report, which is what the CI server looks through to find any failed tests.
+
 
 #### Unit-tested
 
@@ -72,10 +87,10 @@ Install maven through a package manager. Open the project in IntelliJ and go to:
 3. Check Use plugin registry.
 4. Click OK or Apply.
 
-Restart IntelliJ for the changes to take effect. 
+Restart IntelliJ for the changes to take effect.
 
-After restart, open the right Maven pane and click the Reload All Maven Projects button, and then run the _clean_ and 
-_install_ Lifecycles.  
+After restart, open the right Maven pane and click the Reload All Maven Projects button, and then run the _clean_ and
+_install_ Lifecycles.
 
 ## Run/Debug Config
 

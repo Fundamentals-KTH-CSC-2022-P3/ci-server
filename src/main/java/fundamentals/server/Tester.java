@@ -1,5 +1,7 @@
 package fundamentals.server;
 
+import fundamentals.server.helpers.Bash;
+
 import java.io.*;
 
 /**
@@ -8,35 +10,23 @@ import java.io.*;
  * If all tests are successful, this is printed on standard output.
  */
 public class Tester {
+
     private final File repoDir;
-    private final Runtime runtime = Runtime.getRuntime();
+    private Bash shell;
 
     /**
      * Takes a RepoManager that is connected to the repo to test, and tests the repo, reporting any
      * failures.
      * @param repoDir the root of the local copy of the repository to test
      */
-    public Tester(File repoDir) {
+    public Tester(File repoDir, Bash shell) {
         this.repoDir = repoDir;
+        this.shell = shell;
     }
 
     public boolean run() {
         String[] mavenCmd = {"mvn", "test"};
         System.out.println("running maven");
-        Process mavenProcess = null;
-        try {
-            mavenProcess = runtime.exec(mavenCmd, null, repoDir);
-            mavenProcess.waitFor();
-        } catch (InterruptedException interruptedException) {
-            System.err.println("Could not wait for mvn test!");
-            interruptedException.printStackTrace();
-            return false;
-        } catch (IOException ioException) {
-            System.err.println("Could not run maven test in " + repoDir.getAbsolutePath());
-            ioException.printStackTrace();
-            return false;
-        }
-        // TODO: set status of remote repository
-        return mavenProcess.exitValue() == 0;
+        return this.shell.execute(mavenCmd, null, repoDir);
     }
 }

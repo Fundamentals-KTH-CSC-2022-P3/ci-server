@@ -8,7 +8,8 @@ import org.eclipse.jetty.util.security.Credential;
 
 public class SecurityManager {
 
-    private BasicAuthenticator authenticator;
+    public static final String ADMIN_DEFAULT_VALUE = "admin";
+    public static final String ADMIN_PASSWORD_DEFAULT = "adminpass";
     private final static SecurityManager instance = new SecurityManager();
     private final static String usernameEnvVariableName = "CI_SERVER_USER";
     private final static String passwordEnvVariableName = "CI_SERVER_PASS";
@@ -23,11 +24,11 @@ public class SecurityManager {
     }
 
     private void loadUsername(){
-        this.username = Environment.loadEnvironmentVariableOrElse(usernameEnvVariableName, "admin");
+        this.username = Environment.loadEnvironmentVariableOrElse(usernameEnvVariableName, ADMIN_DEFAULT_VALUE);
     }
 
     private void loadPassword(){
-        var password = Environment.loadEnvironmentVariableOrElse(passwordEnvVariableName, "adminpass");
+        var password = Environment.loadEnvironmentVariableOrElse(passwordEnvVariableName, ADMIN_PASSWORD_DEFAULT);
         this.password = Credential.getCredential(password);
     }
 

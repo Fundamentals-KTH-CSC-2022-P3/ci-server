@@ -33,7 +33,7 @@ public class ContinuousIntegrationServer {
 
     static ContextHandlerCollection getEndpointsHandler() {
         var endpoints = new ContextHandlerCollection();
-        endpoints.addHandler(getContextHandler("/webhook", new WebhookHandler(storage, environment)));
+        endpoints.addHandler(getContextHandler("/webhook", new WebhookHandler(environment, storage)));
         endpoints.addHandler(getContextHandler("/build/all", new BuildAllHandler(storage)));
         endpoints.addHandler(getContextHandler("/build", new BuildHandler(storage)));
         return endpoints;

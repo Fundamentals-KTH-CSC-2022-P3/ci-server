@@ -1,5 +1,6 @@
 package fundamentals.server;
 
+import fundamentals.server.helpers.Bash;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,7 +17,7 @@ public class WebhookHandler extends AbstractHandler {
     private final BuildStorage storage;
     private final Environment environment;
 
-    public WebhookHandler(BuildStorage storage, Environment environment) {
+    public WebhookHandler(Environment environment, BuildStorage storage) {
         this.storage = storage;
         this.environment = environment;
     }
@@ -71,7 +72,6 @@ public class WebhookHandler extends AbstractHandler {
             JSONObject newBuild = storage.addNewBuild(owner, repository, commitHash);
             String buildID = newBuild.getString("build_id");
 
-            // Set the commit status to pending on Github.
             String username = environment.getValue("USERNAME");
             String personalAccessToken = environment.getValue("PERSONAL_ACCESS_TOKEN");
             GithubCommitAPI api = new GithubCommitAPI(owner, repository, commitHash, username, personalAccessToken);
@@ -81,6 +81,20 @@ public class WebhookHandler extends AbstractHandler {
                 System.out.println("Updated commit status to pending for commit: " + commitHash);
             } else {
                 System.out.println("Failed to update commit status for: " + commitHash);
+            }
+
+            RepoManager manager = new RepoManager(body.toString(), env);
+            Tester tester = new Tester(manager.repoDir, new Bash());
+
+            manager.cloneRepo();
+            manager.checkoutBranch();
+            Boolean successful = tester.run();
+            manager.cleanUp();
+
+            if (successful) {
+                System.out.println("testsuite executed without any failures");
+            } else {
+                System.out.println("testsuite failed");
             }
 
             // TODO:

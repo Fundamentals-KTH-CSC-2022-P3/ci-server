@@ -24,12 +24,12 @@ public class RepoManager {
      * Create a RepoManager that manages the specified repository.
      * @param payload The payload provided by the GitHub webhook
      */
-    public RepoManager(String payload, Environment environment) throws IOException {
-        accessToken = environment.getValue("ACCESS_TOKEN");
+    public RepoManager(String payload) throws IOException {
         JSONObject obj = new JSONObject(payload);
         String strippedUrl = obj.getJSONObject("repository")
                 .getString("clone_url")
                 .substring("https://".length());
+        accessToken = Environment.getInstance().getValue("ACCESS_TOKEN");
         repoUrl = "https://" + accessToken + "@" + strippedUrl;
         branchName = obj.getString("ref").substring("refs/heads/".length());
         String repositoryName = obj.getJSONObject("repository").getString("name");

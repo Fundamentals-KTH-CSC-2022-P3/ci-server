@@ -2,6 +2,7 @@ package fundamentals.server.handlers;
 
 
 import fundamentals.server.Environment;
+import fundamentals.server.SecurityManager;
 import fundamentals.server.Tester;
 import fundamentals.server.gitTooling.GithubCommitAPI;
 import fundamentals.server.gitTooling.GithubCommitAPIRequest;
@@ -22,6 +23,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 
 public class WebhookHandler extends AbstractHandler {
 
@@ -72,6 +74,17 @@ public class WebhookHandler extends AbstractHandler {
 
             String owner = root.getJSONObject("repository").getJSONObject("owner").getString("name");
             String repository = root.getJSONObject("repository").getString("name");
+
+            try {
+                var repositoryURI = URI.create(root.getJSONObject("repository").getString("url"));
+                SecurityManager.getInstance().verifyAgainstWhitelist(repositoryURI);
+            } catch (SecurityException | IllegalArgumentException | NullPointerException ex) {
+                System.err.println(ex.getMessage());
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
+
+
             String commitHash = root.getString("after");
 
             System.out.println("Push event: ");

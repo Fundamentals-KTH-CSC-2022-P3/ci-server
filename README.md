@@ -78,3 +78,25 @@ Set up a run and debug config by:
 2. Add a configuration to the list of type Application
 3. Choose Java 17 as SDK and choose main class as _fundamentals.server.ContinuousIntegrationServer_
 4. Click OK or Apply
+
+## Statement of Contributions
+
+- Set up of the project; maven, GitHub actions, initial server code etc.
+  - Samuel Philipson
+  - Ludwig Kristoffersson
+- Communication with GitHub, setting repository status
+  - Marcus Alevärn
+- Local file storage
+  - Marcus Alevärn
+- Dope web UI
+  - Marcus Alevärn
+- Managing the local repository
+  - Arvid Siberov
+- Running tests
+  - Arvid Siberov
+  - Katrina Liang
+  - Ludwig Kristoffersson
+- Writing Essence report
+  - Katrina Liang
+- Code review, planning and issue creation
+  - Everyone

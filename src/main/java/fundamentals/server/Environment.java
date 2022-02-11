@@ -66,7 +66,7 @@ public class Environment {
     }
 
     public static String loadEnvironmentVariableOrElse(String environmentVariableName, String orElse) {
-        var sysVariable  = System.getenv(environmentVariableName);
+        var sysVariable = System.getenv(environmentVariableName);
         if (sysVariable == null) {
             return orElse;
         }

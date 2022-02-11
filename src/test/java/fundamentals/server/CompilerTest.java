@@ -56,7 +56,7 @@ public class CompilerTest {
 
         compiler = new Compiler(dir, shell);
 
-        assertFalse(compiler.compile());
+        assertTrue(compiler.compile());
         verify(shell, times(1)).execute(cmd, null, dir);
     }
 

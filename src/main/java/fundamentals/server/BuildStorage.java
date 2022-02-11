@@ -5,7 +5,8 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -104,7 +105,7 @@ public class BuildStorage {
         build.put("owner", owner);
         build.put("repository", repository);
         build.put("commit", commitHash);
-        build.put("build_started", Instant.now().toString());
+        build.put("build_started", new SimpleDateFormat("").format(new Date()));
         build.put("build_ended", "not yet");
         build.put("compile_status", "pending");
         build.put("test_status", "pending");

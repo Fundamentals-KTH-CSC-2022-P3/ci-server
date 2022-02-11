@@ -33,7 +33,14 @@ public class CompilerTest {
     @Test
     @DisplayName("Test compiler runs mvn compile")
     void testThatTesterWillExecuteMavenCompile() {
-        String[] cmd = {"mvn", "compile"};
+        String[] cmd;
+
+        if (System.getProperty("os.name").startsWith("Windows")) {
+            cmd = new String[] {"mvn.cmd", "compile"};
+        } else {
+            cmd = new String[] {"mvn", "compile"};
+        }
+
         File dir = new File(PATH_TO_WORKING_DIRECTORY);
         Bash shell = mock(Bash.class);
 
@@ -48,7 +55,14 @@ public class CompilerTest {
     @Test
     @DisplayName("Test compile returns true if exit code is zero")
     void testThatCompileReturnsTrueIfExitCodeFromMavenCompileIsZero() {
-        String[] cmd = {"mvn", "compile"};
+        String[] cmd;
+
+        if (System.getProperty("os.name").startsWith("Windows")) {
+            cmd = new String[] {"mvn.cmd", "compile"};
+        } else {
+            cmd = new String[] {"mvn", "compile"};
+        }
+
         File dir = new File(PATH_TO_WORKING_DIRECTORY);
         Bash shell = mock(Bash.class);
 
@@ -63,7 +77,14 @@ public class CompilerTest {
     @Test
     @DisplayName("Test compile returns false if exit code is not zero")
     void testThatCompileReturnsTrueIfNonZeroExitCodeFromMavenCompile() {
-        String[] cmd = {"mvn", "compile"};
+        String[] cmd;
+
+        if (System.getProperty("os.name").startsWith("Windows")) {
+            cmd = new String[] {"mvn.cmd", "compile"};
+        } else {
+            cmd = new String[] {"mvn", "compile"};
+        }
+
         File dir = new File(PATH_TO_WORKING_DIRECTORY);
         Bash shell = mock(Bash.class);
 

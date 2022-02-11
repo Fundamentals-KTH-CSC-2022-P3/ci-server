@@ -1,17 +1,15 @@
 package fundamentals.server.helpers;
 
-import fundamentals.server.helpers.Bash;
-
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+/**
+ * A class for managing compilation of the tested repository. This is done via Maven.
+ */
 public class Compiler {
 
     private final File repoDir;
     private Bash shell;
-    private List<String> compileOutput;
 
     public Compiler(File repoDir, Bash shell) {
         this.repoDir = repoDir;
@@ -25,10 +23,14 @@ public class Compiler {
     public boolean compile() {
         String[] mavenCmd = {"mvn", "compile"};
 
-        return this.shell.execute(mavenCmd, null, repoDir);
+        return shell.execute(mavenCmd, null, repoDir);
     }
 
+    /**
+     * Get the output from the compilation command
+     * @return a list of the lines of the compilation output
+     */
     public List<String> getCompileOutput() {
-        return this.shell.getStdout();
+        return shell.getStdout();
     }
 }

@@ -9,6 +9,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A class for managing credentials and security of the server.
+ */
 public class SecurityManager {
 
     private static final String ADMIN_DEFAULT_VALUE = "admin";
@@ -53,6 +56,10 @@ public class SecurityManager {
         return instance;
     }
 
+    /**
+     * Retrieves the LoginService which gives the admin user total access.
+     * @return The singular admin LoginService used by the server.
+     */
     public LoginService getAdminLoginService() {
         if (adminLoginService != null)
             return adminLoginService;
@@ -65,12 +72,22 @@ public class SecurityManager {
         return adminLoginService;
     }
 
+    /**
+     * Check that the URI of a repository is whitelisted.
+     * @param repository the URI to check against the whitelist
+     * @throws SecurityException if repository is not whitelisted.
+     */
     public void verifyAgainstWhitelist(URI repository) {
         if(whitelist.contains(repository))
             return;
         throw new SecurityException("Repository " +repository+ " not whitelisted");
     }
 
+    /**
+     * Gets all roles used by the system. The returned roles are copies of the real roles, and thus changing this
+     * value will not affect the supported roles
+     * @return All roles supported by the current server
+     */
     public String[] getRoles() {
         // Returning clone so that no caller can change overall roles
         return ROLES.clone();

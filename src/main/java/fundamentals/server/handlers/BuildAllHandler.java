@@ -10,6 +10,10 @@ import org.json.JSONArray;
 
 import java.io.IOException;
 
+/**
+ * A handler that responds with a JSON-object with all builds performed by the
+ * server.
+ */
 public class BuildAllHandler extends AbstractHandler {
 
     private final BuildStorage storage;
@@ -18,6 +22,9 @@ public class BuildAllHandler extends AbstractHandler {
         this.storage = storage;
     }
 
+    /**
+     * Responds to a request with a JSON string representing all performed builds.
+     */
     @Override
     public void handle(String target,
                        Request baseRequest,

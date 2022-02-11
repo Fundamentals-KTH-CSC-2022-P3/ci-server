@@ -84,7 +84,8 @@ public class SecurityManager {
     }
 
     /**
-     * Wraps and returns the provided handler in a context handler with a set path
+     * Gets all roles used by the system. The returned roles are copies of the real roles, and thus changing this
+     * value will not affect the supported roles
      * @return All roles supported by the current server
      */
     public String[] getRoles() {

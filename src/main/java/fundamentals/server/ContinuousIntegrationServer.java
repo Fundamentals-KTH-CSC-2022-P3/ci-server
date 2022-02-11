@@ -35,6 +35,12 @@ public class ContinuousIntegrationServer {
         return DEFAULT_PORT_NUMBER;
     }
 
+
+    /**
+     * Wraps and returns the provided handler in a context handler with a set path
+     * @param path the relative path to which the context should be bound to.
+     * @param handler An already initialized handler which is to be wrapped
+     */
     static Handler getContextHandler(String path, Handler handler) {
         var context = new ContextHandler();
         context.setContextPath(path);
@@ -42,6 +48,13 @@ public class ContinuousIntegrationServer {
         return context;
     }
 
+
+    /**
+     * Wraps and returns the provided handler in a context handler with the relative path set, which in turn is
+     * wrapped by a basic auth security handler bound by the single role admin.
+     * @param path the relative path to which the context should be bound to.
+     * @param handler An already initialized handler which is to be wrapped
+     */
     static Handler getSecureHandler(String path, Handler handler) {
         var context = new ContextHandler();
         context.setContextPath(path);
@@ -63,6 +76,10 @@ public class ContinuousIntegrationServer {
         return security;
     }
 
+    /**
+     * Initiates and returns a collection of enpoints which have yet to be registered with any server
+     * @return A collection of handlers with paths preregistered
+     */
     static ContextHandlerCollection getEndpointsHandler() {
         var endpoints = new ContextHandlerCollection();
         endpoints.addHandler(getContextHandler("/webhook", new WebhookHandler(environment, storage)));

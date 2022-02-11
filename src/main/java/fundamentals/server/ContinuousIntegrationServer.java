@@ -19,10 +19,27 @@ import java.util.Collections;
  */
 public class ContinuousIntegrationServer {
 
+    /**
+     * Default port number
+     */
     final static int DEFAULT_PORT_NUMBER = 8014;
+
+    /**
+     * Environment variables
+     */
     final static Environment environment = Environment.loadEnvironmentFile();
+
+    /**
+     * Storage for the build files
+     */
     final static BuildStorage storage = BuildStorage.loadBuildStorageFile();
 
+    /**
+     * Get the port number from stdin or return a default value
+     *
+     * @param args
+     * @return
+     */
     static int getPortNumberFromInputOrElseDefault(String[] args) {
         try {
             return Integer.parseInt(args[0]);

@@ -39,6 +39,13 @@ public class Bash {
         return process.exitValue() == 0;
     }
 
+    /**
+     * Returns the stdout of an executed params
+     *
+     * Will be null if command is not executed
+     *
+     * @return List<String>
+     */
     public List<String> getStdout() {
         return stdout;
     }

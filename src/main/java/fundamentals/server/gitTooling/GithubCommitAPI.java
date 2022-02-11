@@ -14,6 +14,9 @@ import java.util.Base64;
  */
 public class GithubCommitAPI {
 
+    /**
+     * The root url for the github api
+     */
     public static final String GITHUB_API_ROOT_URL = "https://api.github.com";
 
     /**
@@ -149,22 +152,38 @@ public class GithubCommitAPI {
         return new URL(url.toString());
     }
 
-    // Returns the base64 string of the concatenation of the username, colon (':') and the personal access token.
+    /**
+     * @return Returns the base64 string of the concatenation of the username, colon (':') and the personal access token.
+     */
     public String getBasicAuthorizationCredentials() {
         return Base64.getEncoder().encodeToString((username + ":" + personalAccessToken).getBytes(StandardCharsets.UTF_8));
     }
 
-    // Update the HTTP header to enable basic authorization for the CI server.
+    /**
+     * Update the HTTP header to enable basic authorization for the CI server.
+     *
+     * @param http
+     */
     private void setBasicAuthorizationHeader(HttpURLConnection http) {
         http.setRequestProperty("Authorization", "Basic " + getBasicAuthorizationCredentials());
     }
 
-    // Set the Content-Type HTTP header.
+    /**
+     * Set the Content-Type HTTP header.
+     *
+     * @param http
+     * @param contentType
+     */
     private void setContentTypeHeader(HttpURLConnection http, String contentType) {
         http.setRequestProperty("Content-Type", contentType);
     }
 
-    // Set the Accept HTTP header.
+    /**
+     * Set the Accept HTTP header.
+     *
+     * @param http
+     * @param accept
+     */
     private void setAcceptHeader(HttpURLConnection http, String accept) {
         http.setRequestProperty("Accept", accept);
     }

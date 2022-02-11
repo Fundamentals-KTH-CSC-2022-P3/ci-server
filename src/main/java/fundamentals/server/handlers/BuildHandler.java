@@ -14,6 +14,11 @@ public class BuildHandler extends AbstractHandler {
 
     private final BuildStorage storage;
 
+    /**
+     * Create a new handler for /handler/
+     *
+     * @param storage
+     */
     public BuildHandler(BuildStorage storage) {
         this.storage = storage;
     }

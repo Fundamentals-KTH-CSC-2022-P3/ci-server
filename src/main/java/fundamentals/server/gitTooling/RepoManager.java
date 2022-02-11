@@ -10,9 +10,21 @@ import java.io.IOException;
  * This class deals with creating, managing, and deleting the local copies of the tested repositories.
  */
 public class RepoManager {
-    final File workDir = new File("localFiles/");
-    final File parentDir;
-    final File repoDir;
+
+    /**
+     * The root directory of all the "working directories" as in a repository can end up here
+     */
+    public final File workDir = new File("localFiles/");
+
+    /**
+     * Parent directory to the workDir
+     */
+    public final File parentDir;
+
+    /**
+     * Path to a specific repository on disk
+     */
+    public final File repoDir;
 
     private final String accessToken;
 
@@ -131,14 +143,28 @@ public class RepoManager {
         file.delete();
     }
 
+    /**
+     * Get the current workDir
+     *
+     * @return
+     */
     public File getWorkDir() {
         return workDir;
     }
 
+    /**
+     * Get the current parentDir
+     * @return
+     */
     public File getParentDir() {
         return parentDir;
     }
 
+    /**
+     * Get the repoDir
+     *
+     * @return
+     */
     public File getRepoDir() {
         return repoDir;
     }

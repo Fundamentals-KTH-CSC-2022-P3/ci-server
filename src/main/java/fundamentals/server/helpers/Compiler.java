@@ -11,6 +11,12 @@ public class Compiler {
     private final File repoDir;
     private Bash shell;
 
+    /**
+     * Create a new compiler instance
+     *
+     * @param repoDir
+     * @param shell
+     */
     public Compiler(File repoDir, Bash shell) {
         this.repoDir = repoDir;
         this.shell = shell;

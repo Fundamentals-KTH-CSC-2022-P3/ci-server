@@ -104,7 +104,7 @@ public class WebhookHandler extends AbstractHandler {
             String hostname = environment.getValue("HOSTNAME");
 
             // The URL Github will show the user associated with the Github status.
-            String targetUrl = "http://" + hostname + "/build/" + buildID;
+            String targetUrl = "http://" + hostname + "/ui/build/" + buildID;
 
             GithubCommitAPI api = new GithubCommitAPI(owner, repository, commitHash, username, personalAccessToken);
             GithubCommitAPIRequest apiRequest = api.setCommitStatusPending("Compiling and running tests...", targetUrl);

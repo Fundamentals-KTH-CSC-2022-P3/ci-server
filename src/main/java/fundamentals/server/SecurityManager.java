@@ -57,7 +57,8 @@ public class SecurityManager {
     }
 
     /**
-     * Instantiate the login service by reading credentials from the Environment
+     * Retrieves the LoginService which gives the admin user total access.
+     * @return The singular admin LoginService used by the server.
      */
     public LoginService getAdminLoginService() {
         if (adminLoginService != null)
@@ -82,6 +83,10 @@ public class SecurityManager {
         throw new SecurityException("Repository " +repository+ " not whitelisted");
     }
 
+    /**
+     * Wraps and returns the provided handler in a context handler with a set path
+     * @return All roles supported by the current server
+     */
     public String[] getRoles() {
         // Returning clone so that no caller can change overall roles
         return ROLES.clone();

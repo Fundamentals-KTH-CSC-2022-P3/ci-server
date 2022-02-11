@@ -44,7 +44,7 @@ public class Bash {
      *
      * Will be null if command is not executed
      *
-     * @return List<String>
+     * @return list of strings
      */
     public List<String> getStdout() {
         return stdout;

@@ -9,6 +9,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A class for managing credentials and security of the server.
+ */
 public class SecurityManager {
 
     private static final String ADMIN_DEFAULT_VALUE = "admin";
@@ -53,6 +56,9 @@ public class SecurityManager {
         return instance;
     }
 
+    /**
+     * Instantiate the login service by reading credentials from the Environment
+     */
     public LoginService getAdminLoginService() {
         if (adminLoginService != null)
             return adminLoginService;
@@ -65,6 +71,11 @@ public class SecurityManager {
         return adminLoginService;
     }
 
+    /**
+     * Check that the URI of a repository is whitelisted.
+     * @param repository the URI to check against the whitelist
+     * @throws SecurityException if repository is not whitelisted.
+     */
     public void verifyAgainstWhitelist(URI repository) {
         if(whitelist.contains(repository))
             return;

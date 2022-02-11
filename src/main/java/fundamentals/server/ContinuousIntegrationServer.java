@@ -1,8 +1,6 @@
 package fundamentals.server;
 
-import fundamentals.server.handlers.BuildAllHandler;
-import fundamentals.server.handlers.BuildHandler;
-import fundamentals.server.handlers.WebhookHandler;
+import fundamentals.server.handlers.*;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
@@ -38,7 +36,8 @@ public class ContinuousIntegrationServer {
 
     /**
      * Wraps and returns the provided handler in a context handler with a set path
-     * @param path the relative path to which the context should be bound to.
+     *
+     * @param path    the relative path to which the context should be bound to.
      * @param handler An already initialized handler which is to be wrapped
      */
     static Handler getContextHandler(String path, Handler handler) {
@@ -52,7 +51,8 @@ public class ContinuousIntegrationServer {
     /**
      * Wraps and returns the provided handler in a context handler with the relative path set, which in turn is
      * wrapped by a basic auth security handler bound by the single role admin.
-     * @param path the relative path to which the context should be bound to.
+     *
+     * @param path    the relative path to which the context should be bound to.
      * @param handler An already initialized handler which is to be wrapped
      */
     static Handler getSecureHandler(String path, Handler handler) {
@@ -78,6 +78,7 @@ public class ContinuousIntegrationServer {
 
     /**
      * Initiates and returns a collection of enpoints which have yet to be registered with any server
+     *
      * @return A collection of handlers with paths preregistered
      */
     static ContextHandlerCollection getEndpointsHandler() {
@@ -85,11 +86,14 @@ public class ContinuousIntegrationServer {
         endpoints.addHandler(getContextHandler("/webhook", new WebhookHandler(environment, storage)));
         endpoints.addHandler(getSecureHandler("/build/all", new BuildAllHandler(storage)));
         endpoints.addHandler(getSecureHandler("/build", new BuildHandler(storage)));
+        endpoints.addHandler(getSecureHandler("/ui/build/all", new UIBuildAllHandler()));
+        endpoints.addHandler(getSecureHandler("/ui/build", new UIBuildHandler()));
         return endpoints;
     }
 
     /**
      * Start the server, simple as.
+     *
      * @param args the port number can be specified in args. If none is given, DEFAULT_PORT_NUMBER is used.
      * @throws Exception if the server is interrupted.
      */

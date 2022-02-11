@@ -125,7 +125,7 @@ public class WebhookHandler extends AbstractHandler {
             // Check if the project compiles.
             Boolean didCompile = compiler.compile();
 
-            // Store compile logs in the JSON file.
+            // Store compile logs in the JSON object.
             for (String log : compiler.getCompileOutput())
                 newBuild.getJSONArray("compile_logs").put(log);
 
@@ -138,7 +138,7 @@ public class WebhookHandler extends AbstractHandler {
                 Tester tester = new Tester(manager.getRepoDir(), new Bash());
                 Boolean testsPassed = tester.run();
 
-                // Store test logs in the JSON file.
+                // Store test logs in the JSON object.
                 for (String log : tester.getTestOutput())
                     newBuild.getJSONArray("test_logs").put(log);
 
@@ -158,7 +158,7 @@ public class WebhookHandler extends AbstractHandler {
                 apiRequest = api.setCommitStatusError("Compile error", targetUrl);
             }
 
-            // The build has finished store the time and save the build to disk.
+            // The build has finished, store the build ended timestamp and save the build to disk.
             newBuild.put("build_ended", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             storage.saveToDisk();
 

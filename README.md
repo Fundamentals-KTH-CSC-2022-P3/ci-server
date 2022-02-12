@@ -2,6 +2,17 @@
 
 Welcome to our implementation of a minimalistic CI-Server.
 
+## Browse the javadocs
+
+To create a _browsable_ version of the documentation run the following two commands
+
+```bash
+mvn javadoc:javadoc
+python -m http.server 8080 --directory target/site/apidocs
+```
+
+If you navigate to [http://localhost:8080/](http://localhost:8080/) a html rendered version of the documentation should now be available.
+
 ## Core CI Features
 
 ### Compilation

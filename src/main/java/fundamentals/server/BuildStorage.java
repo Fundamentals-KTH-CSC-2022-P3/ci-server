@@ -17,17 +17,26 @@ import java.util.UUID;
  */
 public class BuildStorage {
 
+    /**
+     * The default loation of the build storage file
+     */
     public static final String DEFAULT_BUILD_STORAGE_FILE = "builds.json";
 
-    // The build ID is a universally unique identifier (UUID).
-    // If we don't want to do a linear search when the user asks for information about a build with a certain build ID,
-    // then we should keep a lookup table that maps each build ID to an array index.
+    /**
+     * The build ID is a universally unique identifier (UUID).
+     * If we don't want to do a linear search when the user asks for information about a build with a certain build ID,
+     * then we should keep a lookup table that maps each build ID to an array index.
+     */
     private final HashMap<String, Integer> buildIDToArrayIndex = new HashMap<>();
 
-    // The path to the file where we should save all our builds.
+    /**
+     * The path to the file where we should save all our builds.
+     */
     private final String filePath;
 
-    // All the builds are stored here.
+    /**
+     * All the builds are stored here.
+     */
     private JSONArray builds;
 
     /**
@@ -79,7 +88,11 @@ public class BuildStorage {
         return loadBuildStorageFile(DEFAULT_BUILD_STORAGE_FILE);
     }
 
-    // We want the programmer to use loadBuildStorageFile() to create an instance of this class and never the constructor.
+    /**
+     * We want the programmer to use loadBuildStorageFile() to create an instance of this class and never the constructor.
+     *
+     * @param filePath the path to the builds file.
+     */
     private BuildStorage(String filePath) {
         this.filePath = filePath;
     }

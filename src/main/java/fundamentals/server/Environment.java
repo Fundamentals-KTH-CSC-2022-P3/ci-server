@@ -13,6 +13,9 @@ import java.util.HashMap;
  */
 public class Environment {
 
+    /**
+     * Default name of files with environment variables
+     */
     public static final String DEFAULT_ENVIRONMENT_FILE = ".env";
 
     private final HashMap<String, String> keyValuePairs = new HashMap<>();
@@ -65,6 +68,13 @@ public class Environment {
         return loadEnvironmentFile(DEFAULT_ENVIRONMENT_FILE);
     }
 
+    /**
+     * Load environment variables or return a default value
+     *
+     * @param environmentVariableName the variable name to retrieve
+     * @param orElse value to use if variable name doesn't exist in the environment
+     * @return value, either what's in env or the orElse value
+     */
     public static String loadEnvironmentVariableOrElse(String environmentVariableName, String orElse) {
         var sysVariable = System.getenv(environmentVariableName);
         if (sysVariable == null) {

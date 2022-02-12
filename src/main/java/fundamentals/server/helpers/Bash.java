@@ -18,9 +18,9 @@ public class Bash {
      * Spawns a process by executing a command, and blocks while the process is running.
      *
      * @param cmdArray the command to be executed, each argument a separate element in the array
-     * @param envArr   an array of environment variables for the execution
-     * @param dir      the working directory to execute in
-     * @return true iff the process exited normally with exit code 0
+     * @param envArr an array of environment variables for the execution
+     * @param dir the working directory to execute in
+     * @return true if the process exited normally with exit code 0
      */
     public boolean execute(String[] cmdArray, String[] envArr, File dir) {
         Process process = null;
@@ -40,6 +40,13 @@ public class Bash {
         return process.exitValue() == 0;
     }
 
+    /**
+     * Returns the stdout of an executed params
+     *
+     * Will be null if command is not executed
+     *
+     * @return list of strings
+     */
     public List<String> getStdout() {
         return stdout;
     }

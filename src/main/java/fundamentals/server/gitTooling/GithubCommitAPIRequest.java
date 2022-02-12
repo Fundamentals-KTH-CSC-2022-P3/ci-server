@@ -44,22 +44,39 @@ public class GithubCommitAPIRequest {
 
     // The methods below are only used for unit-testing.
 
+    /**
+     * Get the path from the URL in the http request sent to github
+     *
+     * @return the path part of the url, or an empty string if one does not exist
+     */
     public String getURLPath() {
         return http.getURL().getPath();
     }
 
+    /**
+     * Get the method (POST|GET|...)
+     *
+     * @return the http request method
+     */
     public String getHTTPMethod() {
         return http.getRequestMethod();
     }
 
+    /**
+     * Get a http header
+     *
+     * @param name name of the header
+     * @return the value of the header, null if it doesn't exist
+     */
     public String getHTTPHeaderField(String name) {
         return http.getRequestProperty(name);
     }
 
-    public byte[] getHTTPBody() {
-        return body;
-    }
-
+    /**
+     * Get the http body as json
+     *
+     * @return a json object
+     */
     public JSONObject getHTTPBodyAsJSON() {
         return new JSONObject(new String(body, StandardCharsets.UTF_8));
     }

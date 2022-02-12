@@ -32,7 +32,14 @@ public class TesterTest {
     @Test
     @DisplayName("Test that maven test is run by tester")
     void testThatTesterWillExecuteMavenTest() {
-        String[] cmd = {"mvn", "test"};
+        String[] cmd;
+
+        if (System.getProperty("os.name").startsWith("Windows")) {
+            cmd = new String[] {"mvn.cmd", "test"};
+        } else {
+            cmd = new String[] {"mvn", "test"};
+        }
+
         File dir = new File(PATH_TO_WORKING_DIRECTORY);
         Bash shell = mock(Bash.class);
 
@@ -47,7 +54,14 @@ public class TesterTest {
     @Test
     @DisplayName("Test that a non-zero exit code produces a failing test")
     void testThatANonZeroExitCodeProducesAFailingTest() {
-        String[] cmd = {"mvn", "test"};
+        String[] cmd;
+
+        if (System.getProperty("os.name").startsWith("Windows")) {
+            cmd = new String[] {"mvn.cmd", "test"};
+        } else {
+            cmd = new String[] {"mvn", "test"};
+        }
+
         File dir = new File(PATH_TO_WORKING_DIRECTORY);
         Bash shell = mock(Bash.class);
 

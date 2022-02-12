@@ -35,6 +35,7 @@ public class RepoManager {
 
     /**
      * Create a RepoManager that manages the specified repository.
+     *
      * @param payload The payload provided by the GitHub webhook
      */
     public RepoManager(String payload, Environment environment) throws IOException {
@@ -101,8 +102,6 @@ public class RepoManager {
             System.err.println("Error running git clone in " + parentDir.getAbsolutePath());
             ioException.printStackTrace();
         }
-
-        checkoutBranch();
     }
 
     /**
@@ -131,6 +130,7 @@ public class RepoManager {
 
     /**
      * Delete a file, or recursively delete a directory
+     *
      * @param file the file or directory to be deleted
      */
     static void deleteDirectory(File file) {

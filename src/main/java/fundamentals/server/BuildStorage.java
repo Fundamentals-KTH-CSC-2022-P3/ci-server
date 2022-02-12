@@ -5,7 +5,8 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -102,11 +103,12 @@ public class BuildStorage {
      * added your build.
      *
      * @param owner      the owner of the repository.
+     * @param branch     the branch.
      * @param repository the repository.
      * @param commitHash the commit hash.
      * @return an object of type {@code JSONObject} that contains information about the current build.
      */
-    public synchronized JSONObject addNewBuild(String owner, String repository, String commitHash) {
+    public synchronized JSONObject addNewBuild(String owner, String repository, String branch, String commitHash) {
         JSONObject build = new JSONObject();
 
         // Generate a unique identifier for this build.
@@ -115,9 +117,10 @@ public class BuildStorage {
         // The information we will store about each build.
         build.put("build_id", buildID);
         build.put("owner", owner);
+        build.put("branch", branch);
         build.put("repository", repository);
         build.put("commit", commitHash);
-        build.put("build_started", Instant.now().toString());
+        build.put("build_started", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         build.put("build_ended", "not yet");
         build.put("compile_status", "pending");
         build.put("test_status", "pending");

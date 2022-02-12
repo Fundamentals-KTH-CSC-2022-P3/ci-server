@@ -146,7 +146,7 @@ public class RepoManager {
     /**
      * Get the current workDir
      *
-     * @return
+     * @return a file object
      */
     public File getWorkDir() {
         return workDir;
@@ -154,7 +154,8 @@ public class RepoManager {
 
     /**
      * Get the current parentDir
-     * @return
+     *
+     * @return a file object
      */
     public File getParentDir() {
         return parentDir;
@@ -163,7 +164,7 @@ public class RepoManager {
     /**
      * Get the repoDir
      *
-     * @return
+     * @return a file object
      */
     public File getRepoDir() {
         return repoDir;

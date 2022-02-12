@@ -17,7 +17,7 @@ public class BuildHandler extends AbstractHandler {
     /**
      * Create a new handler for /handler/
      *
-     * @param storage
+     * @param storage the build storage to use for the request
      */
     public BuildHandler(BuildStorage storage) {
         this.storage = storage;

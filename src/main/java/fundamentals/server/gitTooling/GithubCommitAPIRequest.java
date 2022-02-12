@@ -47,7 +47,7 @@ public class GithubCommitAPIRequest {
     /**
      * Get the path from the URL in the http request sent to github
      *
-     * @return
+     * @return the path part of the url, or an empty string if one does not exist
      */
     public String getURLPath() {
         return http.getURL().getPath();
@@ -56,35 +56,26 @@ public class GithubCommitAPIRequest {
     /**
      * Get the method (POST|GET|...)
      *
-     * @return
+     * @return the http request method
      */
     public String getHTTPMethod() {
         return http.getRequestMethod();
     }
 
     /**
-     * Get HTTP a http header
+     * Get a http header
      *
      * @param name name of the header
-     * @return
+     * @return the value of the header, null if it doesn't exist
      */
     public String getHTTPHeaderField(String name) {
         return http.getRequestProperty(name);
     }
 
     /**
-     * Get the body of the http request
-     *
-     * @return
-     */
-    public byte[] getHTTPBody() {
-        return body;
-    }
-
-    /**
      * Get the http body as json
      *
-     * @return
+     * @return a json object
      */
     public JSONObject getHTTPBodyAsJSON() {
         return new JSONObject(new String(body, StandardCharsets.UTF_8));

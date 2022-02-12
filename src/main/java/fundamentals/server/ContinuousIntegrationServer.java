@@ -37,8 +37,8 @@ public class ContinuousIntegrationServer {
     /**
      * Get the port number from stdin or return a default value
      *
-     * @param args
-     * @return
+     * @param args arguments passed to the program on stdin
+     * @return the port number to use
      */
     static int getPortNumberFromInputOrElseDefault(String[] args) {
         try {

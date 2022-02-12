@@ -162,7 +162,7 @@ public class GithubCommitAPI {
     /**
      * Update the HTTP header to enable basic authorization for the CI server.
      *
-     * @param http
+     * @param http a http request to add auth header to
      */
     private void setBasicAuthorizationHeader(HttpURLConnection http) {
         http.setRequestProperty("Authorization", "Basic " + getBasicAuthorizationCredentials());
@@ -171,8 +171,8 @@ public class GithubCommitAPI {
     /**
      * Set the Content-Type HTTP header.
      *
-     * @param http
-     * @param contentType
+     * @param http a http request to add content type header to
+     * @param contentType the content type (eg. application/json)
      */
     private void setContentTypeHeader(HttpURLConnection http, String contentType) {
         http.setRequestProperty("Content-Type", contentType);
@@ -181,8 +181,8 @@ public class GithubCommitAPI {
     /**
      * Set the Accept HTTP header.
      *
-     * @param http
-     * @param accept
+     * @param http set the acceppt http header
+     * @param accept accept value
      */
     private void setAcceptHeader(HttpURLConnection http, String accept) {
         http.setRequestProperty("Accept", accept);

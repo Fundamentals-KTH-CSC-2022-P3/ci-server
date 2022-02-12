@@ -90,7 +90,7 @@ public class BuildStorage {
     /**
      * We want the programmer to use loadBuildStorageFile() to create an instance of this class and never the constructor.
      *
-     * @param filePath
+     * @param filePath the path to the builds file.
      */
     private BuildStorage(String filePath) {
         this.filePath = filePath;

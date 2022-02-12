@@ -14,8 +14,8 @@ public class Compiler {
     /**
      * Create a new compiler instance
      *
-     * @param repoDir
-     * @param shell
+     * @param repoDir the directory where source code will exist
+     * @param shell a shell that will execute the compilation commands
      */
     public Compiler(File repoDir, Bash shell) {
         this.repoDir = repoDir;

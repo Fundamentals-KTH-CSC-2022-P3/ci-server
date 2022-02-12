@@ -19,7 +19,7 @@ public class Bash {
      * @param cmdArray the command to be executed, each argument a separate element in the array
      * @param envArr an array of environment variables for the execution
      * @param dir the working directory to execute in
-     * @return true iff the process exited normally with exit code 0
+     * @return true if the process exited normally with exit code 0
      */
     public boolean execute(String[] cmdArray, String[] envArr, File dir) {
         Process process = null;

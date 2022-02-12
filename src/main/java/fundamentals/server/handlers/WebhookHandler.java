@@ -33,8 +33,8 @@ public class WebhookHandler extends AbstractHandler {
     /**
      * Create a new handler for /webhook/
      *
-     * @param environment
-     * @param storage
+     * @param environment the environment variables
+     * @param storage the build storage to use for the request
      */
     public WebhookHandler(Environment environment, BuildStorage storage) {
         this.storage = storage;

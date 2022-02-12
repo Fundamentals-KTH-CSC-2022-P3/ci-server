@@ -21,7 +21,7 @@ public class BuildAllHandler extends AbstractHandler {
     /**
      * Create a new handler for /build/all
      *
-     * @param storage
+     * @param storage the build storage to use for the request
      */
     public BuildAllHandler(BuildStorage storage) {
         this.storage = storage;

@@ -14,44 +14,84 @@ import java.util.List;
  */
 public class SecurityManager {
 
+    /**
+     * Admin default username and password to be used if nothing else is provided
+     */
     private static final String ADMIN_DEFAULT_VALUE = "admin";
     private static final String ADMIN_PASSWORD_DEFAULT = "adminpass";
-    private final static SecurityManager instance = new SecurityManager();
+
+    /**
+     * The only role provided is the admin role
+     */
+    private final static String[] ROLES = new String[]{"admin"};
+
+
+    /**
+     * The environment variables where the admin login details are provided
+     */
     private final static String usernameEnvVariableName = "CI_SERVER_USER";
     private final static String passwordEnvVariableName = "CI_SERVER_PASS";
-    private final static String[] ROLES = new String[]{"admin"};
+
+    private final static SecurityManager instance = new SecurityManager();
+
+    /**
+     * Admin is the only available user, username and password saved as a local variables
+     */
     private String username;
     private Credential password;
+
     private HashLoginService adminLoginService = null;
-    private List<URI> whitelist = new ArrayList<>();
+
+    /**
+     * Whitelist over the repositories allowed to be run on this server
+     */
+    private List<URI> RepositoryWhitelist = new ArrayList<>();
 
     private SecurityManager() {
         loadUsername();
         loadPassword();
         try {
-            whitelist.add(URI.create("https://github.com/Fundamentals-KTH-CSC-2022-P3/ci-server"));
+            RepositoryWhitelist.add(URI.create("https://github.com/Fundamentals-KTH-CSC-2022-P3/ci-server"));
         } catch (IllegalArgumentException ex) {
             System.err.println("Failed to whitelist project repository");
         }
     }
 
+    /**
+     * Loads the admin username from the environment variable
+     */
     private void loadUsername(){
         this.username = Environment.loadEnvironmentVariableOrElse(usernameEnvVariableName, ADMIN_DEFAULT_VALUE);
     }
 
+    /**
+     * Loads the admin password from the environment variable
+     */
     private void loadPassword(){
         var password = Environment.loadEnvironmentVariableOrElse(passwordEnvVariableName, ADMIN_PASSWORD_DEFAULT);
         this.password = Credential.getCredential(password);
     }
 
+    /**
+     * Retrieves the admin password wrapped in a secure class
+     * @return the hashed password for the admin user
+     */
     private Credential getAdminCredential() {
         return password;
     }
 
+    /**
+     * Retrieve the admin username
+     * @return admin username
+     */
     private String getAdminUsername(){
         return username;
     }
 
+    /**
+     * Retrieves the only instance of the SecurityManager on the server
+     * @return the static security manager
+     */
     public static SecurityManager getInstance() {
         return instance;
     }
@@ -78,7 +118,7 @@ public class SecurityManager {
      * @throws SecurityException if repository is not whitelisted.
      */
     public void verifyAgainstWhitelist(URI repository) {
-        if(whitelist.contains(repository))
+        if(RepositoryWhitelist.contains(repository))
             return;
         throw new SecurityException("Repository " +repository+ " not whitelisted");
     }
